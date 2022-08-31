@@ -53,9 +53,17 @@
 <body>
   <div id="app">
     
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
       
-      <canvas width="1777" height="841"
-        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
       
     <main class="content on">
       <section class="outer">
@@ -81,7 +89,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h3 id="aplayer演示："><a href="#aplayer演示：" class="headerlink" title="aplayer演示："></a>aplayer演示：</h3>
-    <div id="aplayer-kEEDDfxz" class="aplayer aplayer-tag-marker meting-tag-marker"
+    <div id="aplayer-EjBcFPrk" class="aplayer aplayer-tag-marker meting-tag-marker"
          data-id="2121130123" data-server="netease" data-type="playlist" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
     ></div>
 
@@ -305,7 +313,7 @@
 <!-- #reward -->
 <div id="reward">
   <span class="close"><i class="ri-close-line"></i></span>
-  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
   <div class="reward-box">
     
     <div class="reward-item">
@@ -456,10 +464,12 @@
 
 <!-- ClickBoom1 -->
 
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
 <!-- ClickBoom2 -->
- 
-<script src="/js/clickBoom2.js"></script>
- 
+
 <!-- CodeCopy -->
  
 <link rel="stylesheet" href="/css/clipboard.css">

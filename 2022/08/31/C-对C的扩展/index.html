@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++对C的扩展 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-对C的扩展"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++对C的扩展
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E5%AF%B9C%E7%9A%84%E6%89%A9%E5%B1%95/" class="article-date">
+  <time datetime="2022-08-31T01:40:17.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C-对C的扩展"><a href="#C-对C的扩展" class="headerlink" title="C++对C的扩展"></a>C++对C的扩展</h1><h2 id="1、命名空间"><a href="#1、命名空间" class="headerlink" title="1、命名空间"></a>1、命名空间</h2><h3 id="1-1、命名空间（namespace）"><a href="#1-1、命名空间（namespace）" class="headerlink" title="1.1、命名空间（namespace）"></a>1.1、命名空间（namespace）</h3><p>在c++中，名称（name）可以是符号常量、变量、函数、结构、枚举、类和对象等等。<span id="more"></span>工程越大，名称互相冲突性的可能性越大。另外使用多个厂商的类库时，也可能导致名称冲突。为了避免，在大规模程序的设计中，以及在程序员使用各种各样的C++库时，这些标识符的命名发生冲突，标准C++引入关键字namespace（命名空间&#x2F;名字空间&#x2F;名称空间），可以更好地控制标识符的作用域。C++标准程序库中的所有标识符都被定义于一个名为std的namespace中。</p>
+<ul>
+<li><p><iostream>和&lt;iostream.h&gt;格式不一样，前者没有后缀，实际上，在你的编译器include文件夹里面可以看到，二者是两个文件，打开文件就会发现，里面的代码是不一样的。后缀为.h的头文件c++标准已经明确提出不支持了，早些的实现将标准库功能定义在全局空间里，声明在带.h后缀的头文件里，c++标准为了和C区别开，也为了正确使用命名空间，规定头文件不使用后缀.h。 因此</p>
+<p>1）当使用&lt;iostream.h&gt;时，相当于在c中调用库函数，使用的是全局命名空间，也就是早期的c++实现；</p>
+<p>2）当使用<iostream>的时候，该头文件没有定义全局命名空间，必须使用namespace std；这样才能正确使用cout。</p>
+</li>
+<li><p>由于namespace的概念，使用C++标准程序库的任何标识符时，可以有三种选择：</p>
+<p>1）直接指定标识符。例如std::ostream而不是ostream。完整语句如下： std::cout &lt;&lt; std::hex &lt;&lt; 3.4 &lt;&lt; std::endl;</p>
+<p>2）使用using关键字。 using std::cout; using std::endl; using std::cin; 以上程序可以写成 cout &lt;&lt; std::hex &lt;&lt; 3.4 &lt;&lt; endl;</p>
+<p>3）最方便的就是使用using namespace std; 例如： using namespace std;这样命名空间std内定义的所有标识符都有效（曝光）。就好像它们被声明为全局变量一样。那么以上语句可以如下写: cout &lt;&lt;hex &lt;&lt; 3.4 &lt;&lt; endl;因为标准库非常的庞大，所以程序员在选择的类的名称或函数名 时就很有可能和标准库中的某个名字相同。所以为了避免这种情况所造成的名字冲突，就把标准库中的一切都被放在名字空间std中。但这又会带来了一个新问 题。无数原有的C++代码都依赖于使用了多年的伪标准库中的功能，他们都是在全局空间下的。所以就有了&lt;iostream.h&gt; 和<iostream>等等这样的头文件，一个是为了兼容以前的C++代码，一个是为了支持新的标准。命名空间std封装的是标准程序库的名称，标准程序库为了和以前的头文件区别，一般不加”.h”</p>
+</li>
+</ul>
+<h3 id="1-2、namespace语法"><a href="#1-2、namespace语法" class="headerlink" title="1.2、namespace语法"></a>1.2、namespace语法</h3><ul>
+<li><p>创建命名空间</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> B&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;A::a : &quot;</span> &lt;&lt; A::a &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;B::a : &quot;</span> &lt;&lt; B::a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>命名空间只能全局范围内定义（以下写法错误）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">namespace</span> A&#123;</span><br><span class="line">		<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">namespace</span> B&#123;</span><br><span class="line">		<span class="type">int</span> a = <span class="number">20</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;A::a : &quot;</span> &lt;&lt; A::a &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;B::a : &quot;</span> &lt;&lt; B::a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>命名空间可嵌套命名空间</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="keyword">namespace</span> B&#123;</span><br><span class="line">		<span class="type">int</span> a = <span class="number">20</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;A::a : &quot;</span> &lt;&lt; A::a &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;A::B::a : &quot;</span> &lt;&lt; A::B::a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>命名空间是开放的，即可以随时把新的成员加入已有的命名空间中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;hello namespace!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;A::a : &quot;</span> &lt;&lt; A::a &lt;&lt; endl;</span><br><span class="line">	A::<span class="built_in">func</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>声明和实现分离</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> MySpace&#123;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func2</span><span class="params">(<span class="type">int</span> param)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MySpace::func1</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;MySpace::func1&quot;</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MySpace::func2</span><span class="params">(<span class="type">int</span> param)</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;MySpace::func2 : &quot;</span> &lt;&lt; param &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>无名命名空间，该命名空间中的标识符只能在本文件内访问，相当于给这个标识符加上了static，使得其可以作为内部连接</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello namespace&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;a : &quot;</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">func</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>命名空间别名</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> veryLongName&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello namespace&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">namespace</span> shortName = veryLongName;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;veryLongName::a : &quot;</span> &lt;&lt; shortName::a &lt;&lt; endl;</span><br><span class="line">	veryLongName::<span class="built_in">func</span>();</span><br><span class="line">	shortName::<span class="built_in">func</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="1-3、命名空间的使用（using声明）"><a href="#1-3、命名空间的使用（using声明）" class="headerlink" title="1.3、命名空间的使用（using声明）"></a>1.3、命名空间的使用（using声明）</h3><ul>
+<li><p>using声明可使得指定的标识符可用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="type">int</span> paramA = <span class="number">20</span>;</span><br><span class="line">	<span class="type">int</span> paramB = <span class="number">30</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcA</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcA&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcB</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcA&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//1. 通过命名空间域运算符</span></span><br><span class="line">	cout &lt;&lt; A::paramA &lt;&lt; endl;</span><br><span class="line">	A::<span class="built_in">funcA</span>();</span><br><span class="line">	<span class="comment">//2. using声明</span></span><br><span class="line">	<span class="keyword">using</span> A::paramA;</span><br><span class="line">	<span class="keyword">using</span> A::funcA;</span><br><span class="line">	cout &lt;&lt; paramA &lt;&lt; endl;</span><br><span class="line">	<span class="comment">//cout &lt;&lt; paramB &lt;&lt; endl; //不可直接访问</span></span><br><span class="line">	<span class="built_in">funcA</span>();</span><br><span class="line">	<span class="comment">//3. 同名冲突</span></span><br><span class="line">	<span class="comment">//int paramA = 20; //相同作用域注意同名冲突</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>using声明碰到函数重载，如果命名空间包含一组用相同名字重载的函数，using声明就声明了这个重载函数的所有集合</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;&#125;</span><br><span class="line">	<span class="function"><span class="type">int</span>  <span class="title">func</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">using</span> A::func;</span><br><span class="line">	<span class="built_in">func</span>();</span><br><span class="line">	<span class="built_in">func</span>(<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">func</span>(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>using编译指令使整个命名空间标识符可用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A&#123;</span><br><span class="line">	<span class="type">int</span> paramA = <span class="number">20</span>;</span><br><span class="line">	<span class="type">int</span> paramB = <span class="number">30</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcA</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcA&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcB</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcB&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test01</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">using</span> <span class="keyword">namespace</span> A;</span><br><span class="line">	cout &lt;&lt; paramA &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; paramB &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">funcA</span>();</span><br><span class="line">	<span class="built_in">funcB</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">//不会产生二义性</span></span><br><span class="line">	<span class="type">int</span> paramA = <span class="number">30</span>;</span><br><span class="line">	cout &lt;&lt; paramA &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> B&#123;</span><br><span class="line">	<span class="type">int</span> paramA = <span class="number">20</span>;</span><br><span class="line">	<span class="type">int</span> paramB = <span class="number">30</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcA</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcA&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">funcB</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;hello funcB&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test02</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">using</span> <span class="keyword">namespace</span> A;</span><br><span class="line">	<span class="keyword">using</span> <span class="keyword">namespace</span> B;</span><br><span class="line">	<span class="comment">//二义性产生，不知道调用A还是B的paramA</span></span><br><span class="line">    <span class="comment">//这时可以使用作用域解析运算符，则不会出现二义性</span></span><br><span class="line">	<span class="comment">//cout &lt;&lt; paramA &lt;&lt; endl;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2、全局变量检测增强"><a href="#2、全局变量检测增强" class="headerlink" title="2、全局变量检测增强"></a>2、全局变量检测增强</h2><p>​	如下C语言代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>; <span class="comment">//赋值，当做定义</span></span><br><span class="line"><span class="type">int</span> a; <span class="comment">//没有赋值，当做声明</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a:%d\n&quot;</span>,a);</span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此代码在c++下编译失败,在c下编译通过。</p>
+<p>在C语言中，重复定义多个同名的全局变量是合法的。在C++中，不允许定义多个同名的全局变量。C语言中多个同名的全局变量最终会被链接到全局数据区的同一个地址空间上。C++直接拒绝这种二义性的做法。</p>
+<h2 id="3、更严格的类型要求"><a href="#3、更严格的类型要求" class="headerlink" title="3、更严格的类型要求"></a>3、更严格的类型要求</h2><h3 id="3-1、C-中所有的变量和函数都必须有类型"><a href="#3-1、C-中所有的变量和函数都必须有类型" class="headerlink" title="3.1、C++中所有的变量和函数都必须有类型"></a>3.1、C++中所有的变量和函数都必须有类型</h3><p>C语言中的默认类型在C++中是不合法的，C++中所有的变量和函数都必须有类型。如下C语言代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//i没有写类型，可以是任意类型</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fun1</span><span class="params">(i)</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, i);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//i没有写类型，可以是任意类型</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fun2</span><span class="params">(i)</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, i);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//没有写参数，代表可以传任何类型的实参</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fun3</span><span class="params">()</span>&#123; </span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;fun33333333333333333\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//C语言，如果函数没有参数，建议写void，代表没有参数</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fun4</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;fun4444444444444\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">g()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">	fun1(<span class="number">10</span>);</span><br><span class="line">	fun2(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">	fun3(<span class="number">1</span>, <span class="number">2</span>, <span class="string">&quot;abc&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;g = %d\n&quot;</span>, g());</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//更换成.cpp试试</span></span><br></pre></td></tr></table></figure>
+
+<p>以上c代码c编译器编译可通过，c++编译器无法编译通过。</p>
+<ul>
+<li><p>在C语言中，int fun() 表示返回值为int，接受任意参数的函数，int fun(void) 表示返回值为int的无参函数。</p>
+</li>
+<li><p>在C++ 中，int fun() 和int fun(void) 具有相同的意义，都表示返回值为int的无参函数。</p>
+<p>C++更加强调类型，任意的程序元素都必须显示指明类型</p>
+</li>
+</ul>
+<h3 id="3-2、更严格的类型转换"><a href="#3-2、更严格的类型转换" class="headerlink" title="3.2、更严格的类型转换"></a>3.2、更严格的类型转换</h3><p>在C++，不同类型的变量一般是不能直接赋值的，需要相应的强转。如下C语言代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> <span class="title">COLOR</span>&#123;</span> GREEN, RED, YELLOW &#125; color;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">	color mycolor = GREEN;</span><br><span class="line">	mycolor = <span class="number">10</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;mycolor:%d\n&quot;</span>, mycolor);</span><br><span class="line">	<span class="type">char</span>* p = <span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//更换成.cpp试试</span></span><br></pre></td></tr></table></figure>
+
+<p>以上c代码c编译器编译可通过，c++编译器无法编译通过</p>
+<h2 id="4、struct类型增强"><a href="#4、struct类型增强" class="headerlink" title="4、struct类型增强"></a>4、struct类型增强</h2><ul>
+<li><p>C语言的struct定义了一组变量的集合，C编译器并不认为这是一种新的类型。C++中的struct是一个新类型的定义声明。</p>
+</li>
+<li><p>C中定义结构体变量需要加上struct关键字，c++不需要</p>
+<p>如以下C++代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. 结构体中即可以定义成员变量，也可以定义成员函数</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Student</span>&#123;</span><br><span class="line">	string mName;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setName</span><span class="params">(string name)</span></span>&#123; mName = name; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setAge</span><span class="params">(<span class="type">int</span> age)</span></span>&#123; mAge = age; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">showStudent</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Name:&quot;</span> &lt;&lt; mName &lt;&lt; <span class="string">&quot; Age:&quot;</span> &lt;&lt; mAge &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. c++中定义结构体变量不需要加struct关键字</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test01</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Student student;</span><br><span class="line">	student.<span class="built_in">setName</span>(<span class="string">&quot;John&quot;</span>);</span><br><span class="line">	student.<span class="built_in">setAge</span>(<span class="number">20</span>);</span><br><span class="line">	student.<span class="built_in">showStudent</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="5、bool类型关键字"><a href="#5、bool类型关键字" class="headerlink" title="5、bool类型关键字"></a>5、bool类型关键字</h2><p>标准c++的bool类型有两种内建的常量true(转换为整数1)和false(转换为整数0)表示状态。这三个名字都是关键字。</p>
+<ul>
+<li><p>bool类型只有两个值，true(1值)，false(0值)</p>
+</li>
+<li><p>bool类型占1个字节大小</p>
+</li>
+<li><p>给bool类型赋值时，非0值会自动转换为true(1)，0值会自动转换false(0)</p>
+</li>
+</ul>
+<p>理论上bool只占用一个字节，如果多个bool变量定义在一起，可能会各占一个bit，这取决于编译器的实现。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> a;</span><br><span class="line">	<span class="type">bool</span> b = <span class="literal">true</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;b = %d, sizeof(b) = %d\n&quot;</span>, b, <span class="built_in">sizeof</span>(b));</span><br><span class="line"></span><br><span class="line">	b = <span class="number">4</span>;</span><br><span class="line">	a = b;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a = %d, b = %d\n&quot;</span>, a, b);</span><br><span class="line"></span><br><span class="line">	b = <span class="number">-4</span>;</span><br><span class="line">	a = b;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a = %d, b = %d\n&quot;</span>, a, b);</span><br><span class="line"></span><br><span class="line">	a = <span class="number">10</span>;</span><br><span class="line">	b = a;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a = %d, b = %d\n&quot;</span>, a, b);</span><br><span class="line"></span><br><span class="line">	b = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;b = %d\n&quot;</span>, b);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;	cout &lt;&lt; <span class="built_in">sizeof</span>(<span class="literal">false</span>) &lt;&lt; endl; <span class="comment">//为1，//bool类型占一个字节大小</span></span><br><span class="line">	<span class="type">bool</span> flag = <span class="literal">true</span>; <span class="comment">// c语言中没有这种类型</span></span><br><span class="line">	flag = <span class="number">100</span>; <span class="comment">//给bool类型赋值时，非0值会自动转换为true(1),0值会自动转换false(0)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意的是，c语言中也有bool类型，在c99标准之前是没有bool关键字，c99标准已经有bool类型，包含头文件stdbool.h，就可以使用和c++一样的bool类型。</p>
+<h2 id="6、三目运算符功能增强"><a href="#6、三目运算符功能增强" class="headerlink" title="6、三目运算符功能增强"></a>6、三目运算符功能增强</h2><ul>
+<li><p>C语言三目运算表达式返回值为数据值，为右值，不能赋值。如下C代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;ret:%d\n&quot;</span>, a &gt; b ? a : b);</span><br><span class="line"><span class="comment">//思考一个问题，(a &gt; b ? a : b) 三目运算表达式返回的是什么？</span></span><br><span class="line">	</span><br><span class="line"><span class="comment">//(a &gt; b ? a : b) = 100;</span></span><br><span class="line"><span class="comment">//返回的是右值</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>C++语言三目运算表达式返回值为变量本身(引用)，为左值，可以赋值。如下C++代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;ret:%d\n&quot;</span>, a &gt; b ? a : b);</span><br><span class="line"><span class="comment">//思考一个问题，(a &gt; b ? a : b) 三目运算表达式返回的是什么？</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;b:&quot;</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"><span class="comment">//返回的是左值，变量的引用</span></span><br><span class="line">(a &gt; b ? a : b) = <span class="number">100</span>;<span class="comment">//返回的是左值，变量的引用</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;b:&quot;</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+
+<p>注意：三目运算符可能返回的值中如果有一个是常量值，则不能作为左值使用，如 (a &lt; b ? 1 : b )&#x3D; 30;</p>
+</li>
+</ul>
+<p><strong>左值和右值：</strong></p>
+<p>在c++中可以放在赋值操作符左边的是左值，可以放到赋值操作符右面的是右值。</p>
+<p>有些变量即可以当左值，也可以当右值。</p>
+<p>左值为Lvalue，L代表Location，表示内存可以寻址，可以赋值。</p>
+<p>右值为Rvalue，R代表Read,就是可以知道它的值。</p>
+<p>比如:int temp &#x3D; 10; temp在内存中有地址，10没有，但是可以Read到它的值。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E5%AF%B9C%E7%9A%84%E6%89%A9%E5%B1%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/31/C-%E4%B8%AD%E7%9A%84const/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            C++中的const
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/31/C-%E6%A6%82%E8%BF%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++概述</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

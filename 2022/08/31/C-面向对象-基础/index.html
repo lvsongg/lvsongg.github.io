@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++面向对象-基础 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-面向对象-基础"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++面向对象-基础
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2022-08-31T02:08:56.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="面向对象-基础"><a href="#面向对象-基础" class="headerlink" title="面向对象-基础"></a>面向对象-基础</h1><p>面向对象编程（OOP）是一种特殊的、设计程序的概念性方法， C++通过一些特性改进了C语言，使得应用这种方法更容易。<span id="more"></span></p>
+<p>下面是最重要的OOP特性： </p>
+<ul>
+<li><p>抽象； </p>
+</li>
+<li><p>封装和数据隐藏； </p>
+</li>
+<li><p>多态； </p>
+</li>
+<li><p>继承； </p>
+</li>
+<li><p>代码的可重用性</p>
+</li>
+</ul>
+<p>为了实现这些特性并将它们组合在一起，C++所做的最重要的改进是提供了类。</p>
+<h2 id="1、类和对象"><a href="#1、类和对象" class="headerlink" title="1、类和对象"></a>1、类和对象</h2><p>思考：编程实现求圆的周长和面积</p>
+<p>数据描述：	</p>
+<p>半径，周长，面积均用实型数表示</p>
+<p>数据处理：</p>
+<p>输入半径 <strong>r</strong>；</p>
+<p>计算周长 &#x3D; 2<em>π</em><strong>r</strong> ；</p>
+<p>计算面积 &#x3D; π* <strong>r</strong>2 ；</p>
+<p>输出半径，周长，面积；</p>
+<p>方法1：用结构化方法编程，求圆的周长和面积</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// count the girth and area of circle</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream.h&gt;</span></span></span><br><span class="line">using name <span class="built_in">std</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span> <span class="params">()</span></span><br><span class="line">&#123; </span><br><span class="line">   <span class="type">double</span> r, girth, area ; 		</span><br><span class="line">   <span class="type">const</span> <span class="type">double</span> PI = <span class="number">3.1415</span> ;</span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Please input radius:\n&quot;</span> ; <span class="comment">//操作符重载</span></span><br><span class="line">   <span class="built_in">cin</span> &gt;&gt; r ;  <span class="comment">//输入</span></span><br><span class="line">   girth = <span class="number">2</span> * PI * r ; </span><br><span class="line">   area = PI * r * r ;</span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;radius = &quot;</span> &lt;&lt; r &lt;&lt; <span class="built_in">endl</span> ; </span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;girth = &quot;</span> &lt;&lt; girth &lt;&lt; <span class="built_in">endl</span> ;</span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;area = &quot;</span> &lt;&lt; area &lt;&lt; <span class="built_in">endl</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法2：用面向对象方法编程，求圆的周长和面积</p>
+<p><img src="https://pic.imgdb.cn/item/630ec68f16f2c2beb17446c9.jpg"></p>
+<p><img src="https://pic.imgdb.cn/item/630ec6a416f2c2beb17451d2.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="keyword">using</span> name std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Circle</span></span><br><span class="line">&#123;  <span class="type">double</span> radius ; <span class="comment">//成员变量</span></span><br><span class="line">  <span class="keyword">public</span> : <span class="comment">//类的访问控制</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Set_Radius</span><span class="params">( <span class="type">double</span> r )</span> </span>&#123; radius = r ; &#125; <span class="comment">//成员函数</span></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">Get_Radius</span><span class="params">()</span>  </span>&#123; <span class="keyword">return</span>  radius ; &#125; <span class="comment">//通过成员函数设置成员变量</span></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">Get_Girth</span><span class="params">()</span>     </span>&#123; <span class="keyword">return</span>  <span class="number">2</span> * <span class="number">3.14f</span> * radius ; &#125; <span class="comment">//通过成员函数获取成员变量</span></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">Get_Area</span><span class="params">()</span>     </span>&#123; <span class="keyword">return</span>  <span class="number">3.14f</span> * radius * radius ; &#125;</span><br><span class="line">&#125; ;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">   Circle A, B ; <span class="comment">//用类定义对象</span></span><br><span class="line">   A.<span class="built_in">Set_Radius</span>( <span class="number">6.23</span> ) ; <span class="comment">//类的调用</span></span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;A.Radius = &quot;</span> &lt;&lt; A.<span class="built_in">Get_Radius</span>() &lt;&lt; endl ;</span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;A.Girth = &quot;</span> &lt;&lt; A.<span class="built_in">Get_Girth</span>() &lt;&lt; endl ;</span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;A.Area = &quot;</span> &lt;&lt; A.<span class="built_in">Get_Area</span>() &lt;&lt; endl ;</span><br><span class="line">   B.<span class="built_in">Set_Radius</span>( <span class="number">10.5</span> ) ;</span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;B.radius = &quot;</span> &lt;&lt; B.<span class="built_in">Get_Radius</span>() &lt;&lt; endl ;</span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;B.Girth=&quot;</span> &lt;&lt; B.<span class="built_in">Get_Girth</span>() &lt;&lt; endl ;</span><br><span class="line">   cout &lt;&lt; <span class="string">&quot;B.Area = &quot;</span> &lt;&lt; B.<span class="built_in">Get_Area</span>() &lt;&lt; endl ; </span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>采用面向对象方法时，首先从用户的角度考虑对象——描述对象、所需的数据以及描述用户与数据交互所需的操作。完成对接口的描述后，需要确定如何实现接口和数据存储。最后，使用新的设计方案创建 出程序。 </p>
+<p><strong>总结：建立类、对象、成员变量、成员函数，输入输入流基本概念。</strong></p>
+<h3 id="1-1、基本概念"><a href="#1-1、基本概念" class="headerlink" title="1.1、基本概念"></a>1.1、基本概念</h3><p>1）类、对象、成员变量、成员函数</p>
+<p>类是一种将抽象转换为用户定义类型的C++工具，它将数据表示和操纵数据的方法组合成一个自定义的类型。对象是类的实例。</p>
+<p><img src="https://pic.imgdb.cn/item/630ec6e316f2c2beb174718c.jpg"></p>
+<p><img src="https://pic.imgdb.cn/item/630ec6f116f2c2beb17477e0.png"></p>
+<p>2）面向对象的特征：抽象、封装、继承、多态</p>
+<ul>
+<li><strong>封装</strong></li>
+</ul>
+<p>封装就是隐藏对象的属性和实现细节，仅对外公开接口，控制在程序中属性的读和修改的访问级别，将抽象得到的数据和行为（或功能）相结合，形成一个有机的整体，也就是将数据与操作数据的源代码进行有机的结合，形成“类”，其中数据和函数都是类的成员。</p>
+<p>封装的目的是增强安全性和简化编程，使用者不必了解具体的实现细节，而只是要通过外部接口，以特定的访问权限来使用类的成员。</p>
+<p>面相对象使用程序处理事情时以对象为中心去分析，与面向过程不同，面向过程关心处理的逻辑、流程等问题，而不关心事件主体。而面向对象即面向主体，所以我们在解决问题时应该先进行对象的封装（对象是封装类的实例，比如张三是人，人是一个封装类，张三只是对象中的一个实例、一个对象）。比如我们日常生活中的小兔子、小绵羊都可以封装为一个类。</p>
+<p><img src="https://pic.imgdb.cn/item/630ec74b16f2c2beb174a2b2.jpg"></p>
+<p>比如兔子的属性有两只耳朵、四只腿、一双眼睛、三瓣嘴等；行为（功能）有跑、跳、吃素等。</p>
+<ul>
+<li><strong>继承</strong></li>
+</ul>
+<p>继承是面向对象的基本特征之一，继承机制允许创建分等级层次的类。继承就是子类继承父类的特征和行为，使得子类对象（实例）具有父类的实例域和方法，或子类从父类继承方法，使得子类具有父类相同的行为。类似下面这个图：</p>
+<p><img src="https://pic.imgdb.cn/item/630ec76416f2c2beb174b16f.png"></p>
+<p>在上面已经封装了兔子这个类，其他动物也一样可以进行封装。在封装过程中发现兔子、绵羊这两个类具有相似的功能或特性如吃草，所以可以抽取共有特征和方法形成高一层的类，如这里的食草动物、食肉动物。继承之间是子父类的关系。继承机制可以很好的描述一个类的生态，也提高了代码复用率。</p>
+<ul>
+<li><strong>多态</strong></li>
+</ul>
+<p>多态同一个行为具有多个不同表现形式或形态的能力。是指一个类实例（对象）的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。</p>
+<p>多态的优点：</p>
+<ul>
+<li>消除类型之间的耦合关系</li>
+<li>可替换性</li>
+<li>可扩充性</li>
+<li>接口性</li>
+<li>灵活性</li>
+<li>简化性</li>
+</ul>
+<p>简言之，多态其实是在继承的基础上的。比如说今天要去动物园参观动物，那么你说我们去参观兔子、参观绵羊、参观狮子、参观豹子都是对的，但你不能说我们去参观汽车。在这个例子中，子类具有多态性：除了使用自己的身份，还能充当父类。</p>
+<h2 id="2、类的封装"><a href="#2、类的封装" class="headerlink" title="2、类的封装"></a>2、类的封装</h2><p>编写程序的目的是为了解决现实中的问题，而这些问题的构成都是由各种事物组成，在计算机中要解决这种问题，首先要做就是要将这个问题的参与者：事和物抽象到计算机程序中，也就是用程序语言表示现实的事物。那么现在问题是如何用程序语言来表示现实事物？现实世界的事物所具有的共性就是每个事物都具有自身的属性，一些自身具有的行为，所以如果能把事物的属性和行为表示出来，那么就可以抽象出来这个事物。</p>
+<p>比如要表示人这个对象，在c语言中，可以这么表示：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">_Person</span>&#123;</span><br><span class="line">	<span class="type">char</span> name[<span class="number">64</span>];</span><br><span class="line">	<span class="type">int</span> age;</span><br><span class="line">&#125;Person;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">_Aninal</span>&#123;</span><br><span class="line">	<span class="type">char</span> name[<span class="number">64</span>];</span><br><span class="line">	<span class="type">int</span> age;</span><br><span class="line">	<span class="type">int</span> type; <span class="comment">//动物种类</span></span><br><span class="line">&#125;Ainmal;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PersonEat</span><span class="params">(Person* person)</span></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s在吃人吃的饭!\n&quot;</span>,person-&gt;name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AnimalEat</span><span class="params">(Ainmal* animal)</span></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s在吃动物吃的饭!\n&quot;</span>, animal-&gt;name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	Person person;</span><br><span class="line">	<span class="built_in">strcpy</span>(person.name, <span class="string">&quot;小明&quot;</span>);</span><br><span class="line">	person.age = <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">AnimalEat</span>(&amp;person);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个结构体用来表示一个对象所包含的属性，函数用来表示一个对象所具有的行为，这样我们就表示出来一个事物，在c语言中，行为和属性是分开的，也就是说吃饭这个属性不属于某类对象，而属于所有的共同的数据，所以不单单是PeopleEat可以调用Person数据，AnimalEat也可以调用Person数据，那么万一调用错误，将会导致问题发生。从这个案例可以体会到，属性和行为应该放在一起，一起表示一个具有属性和行为的对象。</p>
+<p>1）封装，是面向对象程序设计最基本的特性。把数据（属性）和函数（操作）合成一个整体，这在计算机世界中是用类与对象实现的。</p>
+<p>2）封装，把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。</p>
+<p>注意：有2层含义（把属性和方法进行封装 ，对属性和方法进行访问控制）</p>
+<p>C++中类的封装</p>
+<ul>
+<li><p>成员变量，C++中用于表示类属性的变量</p>
+</li>
+<li><p>成员函数，C++中用于表示类行为的函数</p>
+</li>
+</ul>
+<p>类成员的访问控制，在C++中可以给成员变量和成员函数定义访问级别。</p>
+<ul>
+<li>访问权限<ul>
+<li>在类的内部(作用域范围内)，没有访问权限之分，所有成员可以相互访问</li>
+<li>在类的外部(作用域范围外)，访问权限才有意义：public，private，protected</li>
+<li>在类的外部，只有public修饰的成员才能被访问，在没有涉及继承与派生时，private和protected是同等级的，外部不允许访问。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/630ec80816f2c2beb1750338.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//封装两层含义</span></span><br><span class="line"><span class="comment">//1. 属性和行为合成一个整体</span></span><br><span class="line"><span class="comment">//2. 访问控制，现实事物本身有些属性和行为是不对外开放</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="comment">//人具有的行为(函数)</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">Dese</span><span class="params">()</span></span>&#123; cout &lt;&lt; <span class="string">&quot;我有钱，年轻，个子又高，就爱嘚瑟!&quot;</span> &lt;&lt; endl;&#125;</span><br><span class="line"><span class="comment">//人的属性(变量)</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> mTall; <span class="comment">//多高，可以让外人知道</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="type">int</span> mMoney; <span class="comment">// 有多少钱,只能儿子孙子知道</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> mAge; <span class="comment">//年龄，不想让外人知道</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	Person p;</span><br><span class="line">	p.mTall = <span class="number">220</span>;</span><br><span class="line">	<span class="comment">//p.mMoney 保护成员外部无法访问</span></span><br><span class="line">	<span class="comment">//p.mAge 私有成员外部无法访问</span></span><br><span class="line">	p.<span class="built_in">Dese</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>struct和class关键字区别</strong></p>
+<ul>
+<li><p>在用struct定义类时，所有成员的默认属性为public</p>
+</li>
+<li><p>在用class定义类时，所有成员的默认属性为private</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span>&#123;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	A a;</span><br><span class="line">	B b;</span><br><span class="line">	<span class="comment">//a.mAge; //无法访问私有成员</span></span><br><span class="line">	b.mAge; <span class="comment">//可正常外部访问</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>将成员变量设置为private</strong></p>
+<ul>
+<li><p>可赋予客户端访问数据的一致性。</p>
+<p>如果成员变量不是public，客户端唯一能够访问对象的方法就是通过成员函数。如果类中所有public权限的成员都是函数，客户在访问类成员时只会默认访问函数，不需要考虑访问的成员需不需要添加(),这就省下了许多搔首弄耳的时间。</p>
+</li>
+<li><p>可细微划分访问控制。</p>
+<p>使用成员函数可使得对变量的控制处理更加精细。如果让所有的成员变量为public，每个人都可以读写它。如果设置为private，可以实现“不准访问”、“只读访问”、“读写访问”，甚至可以写出“只写访问”。</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AccessLevels</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//对只读属性进行只读访问</span></span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getReadOnly</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> readOnly; &#125;</span><br><span class="line">	<span class="comment">//对读写属性进行读写访问</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setReadWrite</span><span class="params">(<span class="type">int</span> val)</span></span>&#123; readWrite = val; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getReadWrite</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> readWrite; &#125;</span><br><span class="line">	<span class="comment">//对只写属性进行只写访问</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setWriteOnly</span><span class="params">(<span class="type">int</span> val)</span></span>&#123; writeOnly = val; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> readOnly; <span class="comment">//对外只读访问</span></span><br><span class="line">	<span class="type">int</span> noAccess; <span class="comment">//外部不可访问</span></span><br><span class="line">	<span class="type">int</span> readWrite; <span class="comment">//读写访问</span></span><br><span class="line">	<span class="type">int</span> writeOnly; <span class="comment">//只写访问</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、面向对象程序设计案例"><a href="#3、面向对象程序设计案例" class="headerlink" title="3、面向对象程序设计案例"></a>3、面向对象程序设计案例</h2><h3 id="3-1、设计立方体类"><a href="#3-1、设计立方体类" class="headerlink" title="3.1、设计立方体类"></a>3.1、设计立方体类</h3><p>设计立方体类(cube)，求出立方体的面积和体积，求两个立方体，是否相等（全局函数和成员函数）。</p>
+<p><img src="https://pic.imgdb.cn/item/630ec82c16f2c2beb17513d1.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//立方体类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cub</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setL</span><span class="params">(<span class="type">int</span> l)</span></span>&#123; mL = l; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setW</span><span class="params">(<span class="type">int</span> w)</span></span>&#123; mW = w; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setH</span><span class="params">(<span class="type">int</span> h)</span></span>&#123; mH = h; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getL</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mL; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getW</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mW; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getH</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mH; &#125;</span><br><span class="line">	<span class="comment">//立方体面积</span></span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">caculateS</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> (mL*mW + mL*mH + mW*mH) * <span class="number">2</span>; &#125;</span><br><span class="line">	<span class="comment">//立方体体积</span></span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">caculateV</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mL * mW * mH; &#125;</span><br><span class="line">	<span class="comment">//成员方法</span></span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">CubCompare</span><span class="params">(Cub&amp; c)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">getL</span>() == c.<span class="built_in">getL</span>() &amp;&amp; <span class="built_in">getW</span>() == c.<span class="built_in">getW</span>() &amp;&amp; <span class="built_in">getH</span>() == c.<span class="built_in">getH</span>())&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> mL; <span class="comment">//长</span></span><br><span class="line">	<span class="type">int</span> mW; <span class="comment">//宽</span></span><br><span class="line">	<span class="type">int</span> mH; <span class="comment">//高</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//比较两个立方体是否相等</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">CubCompare</span><span class="params">(Cub&amp; c1, Cub&amp; c2)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (c1.<span class="built_in">getL</span>() == c2.<span class="built_in">getL</span>() &amp;&amp; c1.<span class="built_in">getW</span>() == c2.<span class="built_in">getW</span>() &amp;&amp; c1.<span class="built_in">getH</span>() == c2.<span class="built_in">getH</span>())&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Cub c1, c2;</span><br><span class="line">	c1.<span class="built_in">setL</span>(<span class="number">10</span>);</span><br><span class="line">	c1.<span class="built_in">setW</span>(<span class="number">20</span>);</span><br><span class="line">	c1.<span class="built_in">setH</span>(<span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">	c2.<span class="built_in">setL</span>(<span class="number">20</span>);</span><br><span class="line">	c2.<span class="built_in">setW</span>(<span class="number">20</span>);</span><br><span class="line">	c2.<span class="built_in">setH</span>(<span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;c1面积:&quot;</span> &lt;&lt; c1.<span class="built_in">caculateS</span>() &lt;&lt; <span class="string">&quot; 体积:&quot;</span> &lt;&lt; c1.<span class="built_in">caculateV</span>() &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;c2面积:&quot;</span> &lt;&lt; c2.<span class="built_in">caculateS</span>() &lt;&lt; <span class="string">&quot; 体积:&quot;</span> &lt;&lt; c2.<span class="built_in">caculateV</span>() &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//比较两个立方体是否相等</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">CubCompare</span>(c1, c2))&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;c1和c2相等!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;c1和c2不相等!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (c1.<span class="built_in">CubCompare</span>(c2))&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;c1和c2相等!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;c1和c2不相等!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2、设计圆类，描述点和圆的关系"><a href="#3-2、设计圆类，描述点和圆的关系" class="headerlink" title="3.2、设计圆类，描述点和圆的关系"></a>3.2、设计圆类，描述点和圆的关系</h3><p>设计一个圆形类（AdvCircle），和一个点类（Point），计算点在圆内部还是圆外。即：求点和圆的关系（圆内和圆外）</p>
+<p>假如圆心坐标为x0, y0, 半径为r，点的坐标为x1, y1：</p>
+<p>1）点在圆上：(x1-x0)<em>(x1-x0) + (y1-y0)</em>(y1-y0) &#x3D;&#x3D; r*r</p>
+<p>2）点在圆内：(x1-x0)<em>(x1-x0) + (y1-y0)</em>(y1-y0) &lt; r*r</p>
+<p>3）点在圆外：(x1-x0)<em>(x1-x0) + (y1-y0)</em>(y1-y0) &gt; r*r</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//点类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setX</span><span class="params">(<span class="type">int</span> x)</span></span>&#123; mX = x; &#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setY</span><span class="params">(<span class="type">int</span> y)</span></span>&#123; mY = y; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getX</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mX; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getY</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mY; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> mX;</span><br><span class="line">	<span class="type">int</span> mY;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Circle</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setP</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">		mP.<span class="built_in">setX</span>(x);</span><br><span class="line">		mP.<span class="built_in">setY</span>(y);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setR</span><span class="params">(<span class="type">int</span> r)</span></span>&#123; mR = r; &#125;</span><br><span class="line">	<span class="function">Point&amp; <span class="title">getP</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mP; &#125;</span><br><span class="line">	<span class="function"><span class="type">int</span> <span class="title">getR</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> mR; &#125;</span><br><span class="line">	<span class="comment">//判断点和圆的关系</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">IsPointInCircle</span><span class="params">(Point&amp; point)</span></span>&#123;</span><br><span class="line">		<span class="type">int</span> distance = (point.<span class="built_in">getX</span>() - mP.<span class="built_in">getX</span>()) * (point.<span class="built_in">getX</span>() - mP.<span class="built_in">getX</span>()) + (point.<span class="built_in">getY</span>() - mP.<span class="built_in">getY</span>()) * (point.<span class="built_in">getY</span>() - mP.<span class="built_in">getY</span>());</span><br><span class="line">		<span class="type">int</span> radius = mR * mR;</span><br><span class="line">		<span class="keyword">if</span> (distance &lt; radius)&#123;</span><br><span class="line">			cout &lt;&lt; <span class="string">&quot;Point(&quot;</span> &lt;&lt; point.<span class="built_in">getX</span>() &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; point.<span class="built_in">getY</span>() &lt;&lt; <span class="string">&quot;)在圆内!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (distance &gt; radius)&#123;</span><br><span class="line">			cout &lt;&lt; <span class="string">&quot;Point(&quot;</span> &lt;&lt; point.<span class="built_in">getX</span>() &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; point.<span class="built_in">getY</span>() &lt;&lt; <span class="string">&quot;)在圆外!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;</span><br><span class="line">			cout &lt;&lt; <span class="string">&quot;Point(&quot;</span> &lt;&lt; point.<span class="built_in">getX</span>() &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; point.<span class="built_in">getY</span>() &lt;&lt; <span class="string">&quot;)在圆上!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Point mP; <span class="comment">//圆心</span></span><br><span class="line">	<span class="type">int</span> mR; <span class="comment">//半径</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//实例化圆对象</span></span><br><span class="line">	Circle circle;</span><br><span class="line">	circle.<span class="built_in">setP</span>(<span class="number">20</span>, <span class="number">20</span>);</span><br><span class="line">	circle.<span class="built_in">setR</span>(<span class="number">5</span>);</span><br><span class="line">	<span class="comment">//实例化点对象</span></span><br><span class="line">	Point point;</span><br><span class="line">	point.<span class="built_in">setX</span>(<span class="number">25</span>);</span><br><span class="line">	point.<span class="built_in">setY</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">	circle.<span class="built_in">IsPointInCircle</span>(point);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            C++面向对象-对象的构造和析构
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/31/C-%E5%AF%B9C%E7%9A%84%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++对C的函数扩展</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

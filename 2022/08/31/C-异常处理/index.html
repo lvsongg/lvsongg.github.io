@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++异常处理 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-异常处理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++异常处理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2022-08-31T07:56:51.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C-异常处理"><a href="#C-异常处理" class="headerlink" title="C++异常处理"></a>C++异常处理</h1><p>异常是一种程序控制机制，与函数机制独立和互补。<span id="more"></span></p>
+<p>函数是一种以栈结构展开的上下函数衔接的程序控制系统，异常是另一种控制结构，它依附于栈结构，却可以同时设置多个异常类型作为网捕条件，从而以类型匹配在栈机制中跳跃回馈。</p>
+<p>异常设计目的：栈机制是一种高度节律性控制机制，面向对象编程却要求对象之间有方向、有目的的控制传动,从一开始，异常就是冲着改变程序控制结构，以适应面向对象程序更有效地工作这个主题，而不是仅为了进行错误处理。异常设计出来之后，却发现在错误处理方面获得了最大的好处。</p>
+<h2 id="1、c-异常处理机制"><a href="#1、c-异常处理机制" class="headerlink" title="1、c++异常处理机制"></a>1、c++异常处理机制</h2><p>对异常的处理有3个组成部 分： </p>
+<ul>
+<li><p>引发异常</p>
+</li>
+<li><p>使用处理程序捕获异常 </p>
+</li>
+<li><p>使用try块</p>
+</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/630f14a316f2c2beb1a1f0b7.jpg"></p>
+<ul>
+<li><p>C++的异常处理机制使得异常的引发和异常的处理不必在同一个函数中，这样底层的函数可以着重解决具体问题，而不必过多的考虑异常的处理。上层调用者可以再适当的位置设计对不同类型异常的处理。</p>
+</li>
+<li><p>异常是专门针对抽象编程中的一系列错误处理的，C++中不能借助函数机制，因为栈结构的本质是先进后出，依次访问，无法进行跳跃，但错误处理的特征却是遇到错误信息就想要转到若干级之上进行重新尝试。</p>
+</li>
+<li><p>异常超脱于函数机制，决定了其对函数的跨越式回跳。异常跨越函数</p>
+</li>
+</ul>
+<h2 id="2、c-异常处理的实现"><a href="#2、c-异常处理的实现" class="headerlink" title="2、c++异常处理的实现"></a>2、c++异常处理的实现</h2><h3 id="2-1、c-异常处理语法"><a href="#2-1、c-异常处理语法" class="headerlink" title="2.1、c++异常处理语法"></a>2.1、c++异常处理语法</h3><p><img src="https://pic.imgdb.cn/item/630f14b616f2c2beb1a1fd13.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(...) <span class="keyword">throw</span> A;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="built_in">f</span>();</span><br><span class="line">  &#125;<span class="built_in">catch</span>(B)&#123;</span><br><span class="line">    cout&lt;&lt;“exception B\n”;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="built_in">g</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1） 若有异常则通过throw操作创建一个异常对象并抛掷。</p>
+<p>2） 将可能抛出异常的程序段嵌在try块之中。控制通过正常的顺序执行到达try语句，然后执行try块内的保护段。</p>
+<p>3） 如果在保护段执行期间没有引起异常，那么跟在try块后的catch子句就不执行。程序从try块后跟随的最后一个catch子句后面的语句继续执行下去。</p>
+<p>4） catch子句按其在try块后出现的顺序被检查。匹配的catch子句将捕获并处理异常（或继续抛掷异常）。</p>
+<p>5） 如果匹配的处理器未找到，则运行函数terminate将被自动调用，其缺省功能是调用abort终止程序。</p>
+<p>6）处理不了的异常，可以在catch的最后一个分支，使用throw语法，向上扔。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//被零整除</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">divide</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (y ==<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> x;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> x/y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;8/2 = &quot;</span> &lt;&lt; <span class="built_in">divide</span>(<span class="number">8</span>, <span class="number">2</span>) &lt;&lt; endl;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;10/0 =&quot;</span> &lt;&lt; <span class="built_in">divide</span>(<span class="number">10</span>, <span class="number">0</span>) &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">int</span> e)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;e&quot;</span> &lt;&lt; <span class="string">&quot; is divided by zero!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(...)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;未知异常&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;ok&quot;</span> &lt;&lt; endl;</span><br><span class="line"> 	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>7）异常机制与函数机制互不干涉，但捕捉的方式是基于类型匹配。捕捉相当于函数返回类型的匹配，而不是函数参数的匹配，所以捕捉不用考虑一个抛掷中的多种数据类型匹配问题</p>
+<p>比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> 	j = <span class="number">0</span>;    </span><br><span class="line">		<span class="type">double</span> 	d = <span class="number">2.3</span>;    </span><br><span class="line">		<span class="type">char</span> 	str[<span class="number">20</span>] = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;Please input a exception number: &quot;</span>;</span><br><span class="line">		<span class="type">int</span> a; </span><br><span class="line">		cin&gt;&gt;a;</span><br><span class="line">		<span class="keyword">switch</span>(a)</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="keyword">case</span>  <span class="number">1</span>: </span><br><span class="line">			<span class="keyword">throw</span> d;      </span><br><span class="line">		<span class="keyword">case</span>  <span class="number">2</span>: </span><br><span class="line">			<span class="keyword">throw</span> j;      </span><br><span class="line">		<span class="keyword">case</span>  <span class="number">3</span>: </span><br><span class="line">			<span class="keyword">throw</span> str;</span><br><span class="line">		<span class="keyword">case</span>  <span class="number">4</span>: </span><br><span class="line">			<span class="keyword">throw</span> <span class="built_in">A</span>();      </span><br><span class="line">		<span class="keyword">case</span>  <span class="number">5</span>: </span><br><span class="line">			<span class="keyword">throw</span> <span class="built_in">B</span>();</span><br><span class="line">		<span class="keyword">default</span>: </span><br><span class="line">			cout&lt;&lt;<span class="string">&quot;No throws here.\n&quot;</span>;    </span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(<span class="type">int</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;int exception.\n&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(<span class="type">double</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;double exception.\n&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(<span class="type">char</span>*)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;char* exception.\n&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(A)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;class A exception.\n&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(B)</span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;class B exception.\n&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;That&#x27;s ok.\n&quot;</span>;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>catch代码块必须出现在try后，并且在try块后可以出现多个catch代码块，以捕捉各种不同类型的抛掷。</p>
+<p>异常机制是基于这样的原理：程序运行实质上是数据实体在做一些操作，因此发生异常现象的地方，一定是某个实体出了差错，该实体所对应的数据类型便作为抛掷和捕捉的依据。</p>
+<p>8）异常捕捉严格按照类型匹配</p>
+<p>异常捕捉的类型匹配之苛刻程度可以和模板的类型匹配媲美，它不允许相容类型的隐式转换，比如，抛掷char类型用int型就捕捉不到。例如下列代码不会输出“int exception”，从而也不会输出“That’s ok”  因为出现异常后提示退出</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> ‘H’;</span><br><span class="line">  &#125;<span class="built_in">catch</span>(<span class="type">int</span>)&#123;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;int exception.\n&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  cout&lt;&lt;<span class="string">&quot;That&#x27;s ok.\n&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、栈解旋-unwinding"><a href="#2-2、栈解旋-unwinding" class="headerlink" title="2.2、栈解旋(unwinding)"></a>2.2、栈解旋(unwinding)</h3><p>异常被抛出后，从进入try块起，到异常被抛掷前，这期间在栈上的构造的所有对象，都会被自动析构。析构的顺序与构造的顺序相反。这一过程称为栈的解旋(unwinding)。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyException</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Test</span>(<span class="type">int</span> a=<span class="number">0</span>, <span class="type">int</span> b=<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;a = a;</span><br><span class="line">		<span class="keyword">this</span>-&gt;b = b;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Test 构造函数执行&quot;</span> &lt;&lt; <span class="string">&quot;a:&quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot; b: &quot;</span> &lt;&lt; b &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">printT</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;a:&quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot; b: &quot;</span> &lt;&lt; b &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Test</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Test 析构函数执行&quot;</span> &lt;&lt; <span class="string">&quot;a:&quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot; b: &quot;</span> &lt;&lt; b &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> a;</span><br><span class="line">	<span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunc</span><span class="params">()</span> <span class="title">throw</span> <span class="params">(MyException)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Test t1;</span><br><span class="line">	Test t2;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;定义了两个栈变量,异常抛出后测试栈变量的如何被析构&quot;</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">throw</span> <span class="built_in">MyException</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//异常被抛出后，从进入try块起，到异常被抛掷前，这期间在栈上的构造的所有对象，</span></span><br><span class="line">	<span class="comment">//都会被自动析构。析构的顺序与构造的顺序相反。</span></span><br><span class="line">	<span class="comment">//这一过程称为栈的解旋(unwinding)</span></span><br><span class="line">	<span class="keyword">try</span>  </span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">myFunc</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//catch(MyException &amp;e) //这里不能访问异常对象</span></span><br><span class="line">	<span class="built_in">catch</span>(MyException ) <span class="comment">//这里不能访问异常对象</span></span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;接收到MyException类型异常&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(...)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;未知类型异常&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3、异常接口声明"><a href="#3、异常接口声明" class="headerlink" title="3、异常接口声明"></a>3、异常接口声明</h2><p>1）为了加强程序的可读性，可以在函数声明中列出可能抛出的所有异常类型，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span> <span class="title">throw</span> <span class="params">(A, B, C , D)</span></span>; <span class="comment">//这个函数func（）能够且只能抛出类型A B C D及其子类型的异常。</span></span><br></pre></td></tr></table></figure>
+
+<p>2）如果在函数声明中没有包含异常接口声明，则次函数可以抛掷任何类型的异常，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>3）一个不抛掷任何类型异常的函数可以声明为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">()</span>  <span class="title">throw</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>4） 如果一个函数抛出了它的异常接口声明所不允许抛出的异常，unexpected函数会被调用，该函数默认行为调用terminate函数中止程序。</p>
+<h2 id="4、异常类型和异常变量的生命周期"><a href="#4、异常类型和异常变量的生命周期" class="headerlink" title="4、异常类型和异常变量的生命周期"></a>4、异常类型和异常变量的生命周期</h2><ul>
+<li><p>throw的异常是有类型的，可以是数字、字符串、类对象。</p>
+</li>
+<li><p>throw的异常是有类型的，catch严格按照类型进行匹配。</p>
+</li>
+<li><p>异常对象的内存模型。</p>
+</li>
+</ul>
+<h3 id="4-1、throw-int类型异常"><a href="#4-1、throw-int类型异常" class="headerlink" title="4.1、throw int类型异常"></a>4.1、throw int类型异常</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//文件的二进制copy</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">filecopy</span><span class="params">(<span class="type">char</span> *filename2, <span class="type">char</span> *filename1 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	FILE *fp1= <span class="literal">NULL</span>,  *fp2 = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	fp1 = <span class="built_in">fopen</span>(filename1, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//return 1;</span></span><br><span class="line">		<span class="keyword">throw</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fp2 = <span class="built_in">fopen</span>(filename2, <span class="string">&quot;wb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//return 2;</span></span><br><span class="line">		<span class="keyword">throw</span> <span class="number">2</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span> buf[<span class="number">256</span>];</span><br><span class="line">	<span class="type">int</span>  readlen, writelen;</span><br><span class="line">	<span class="keyword">while</span> ( (readlen = <span class="built_in">fread</span>(buf, <span class="number">1</span>, <span class="number">256</span>, fp1)) &gt; <span class="number">0</span> ) <span class="comment">//如果读到数据，则大于0 </span></span><br><span class="line">	&#123;</span><br><span class="line">		writelen = <span class="built_in">fwrite</span>(buf, <span class="number">1</span>, readlen, fp2);</span><br><span class="line">		<span class="keyword">if</span> (readlen != readlen)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">//return 3;</span></span><br><span class="line">			<span class="keyword">throw</span> <span class="number">3</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">fclose</span>(fp1);</span><br><span class="line">	<span class="built_in">fclose</span>(fp2);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2、throw字符类型异常"><a href="#4-2、throw字符类型异常" class="headerlink" title="4.2、throw字符类型异常"></a>4.2、throw字符类型异常</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//文件的二进制copy</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">filecopy</span><span class="params">(<span class="type">char</span> *filename2, <span class="type">char</span> *filename1 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	FILE *fp1= <span class="literal">NULL</span>,  *fp2 = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	fp1 = <span class="built_in">fopen</span>(filename1, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="string">&quot;打开源文件时出错&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fp2 = <span class="built_in">fopen</span>(filename2, <span class="string">&quot;wb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="string">&quot;打开目标文件时出错&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span> buf[<span class="number">256</span>];</span><br><span class="line">	<span class="type">int</span>  readlen, writelen;</span><br><span class="line">	<span class="keyword">while</span> ( (readlen = <span class="built_in">fread</span>(buf, <span class="number">1</span>, <span class="number">256</span>, fp1)) &gt; <span class="number">0</span> ) <span class="comment">//如果读到数据，则大于0 </span></span><br><span class="line">	&#123;</span><br><span class="line">		writelen = <span class="built_in">fwrite</span>(buf, <span class="number">1</span>, readlen, fp2);</span><br><span class="line">		<span class="keyword">if</span> (readlen != readlen)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="string">&quot;拷贝文件过程中失败&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">fclose</span>(fp1);</span><br><span class="line">	<span class="built_in">fclose</span>(fp2);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3、throw类对象类型异常"><a href="#4-3、throw类对象类型异常" class="headerlink" title="4.3、throw类对象类型异常"></a>4.3、throw类对象类型异常</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//throw int类型变量</span></span><br><span class="line"><span class="comment">//throw 字符串类型</span></span><br><span class="line"><span class="comment">//throw 类类型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BadSrcFile</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">BadSrcFile</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;BadSrcFile 构造 do &quot;</span>&lt;&lt;endl;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">BadSrcFile</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;BadSrcFile 析构 do &quot;</span>&lt;&lt;endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">BadSrcFile</span>(BadSrcFile &amp; obj)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;拷贝构造  do &quot;</span>&lt;&lt;endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;aaaa&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BadDestFile</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BadCpyFile</span> &#123;&#125;;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">filecopy</span><span class="params">(<span class="type">char</span> *filename2, <span class="type">char</span> *filename1 )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	FILE *fp1= <span class="literal">NULL</span>,  *fp2 = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	fp1 = <span class="built_in">fopen</span>(filename1, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//throw new BadSrcFile();</span></span><br><span class="line">		<span class="keyword">throw</span>  <span class="built_in">BadSrcFile</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fp2 = <span class="built_in">fopen</span>(filename2, <span class="string">&quot;wb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (fp1 == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="built_in">BadDestFile</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">char</span> buf[<span class="number">256</span>];</span><br><span class="line">	<span class="type">int</span>  readlen, writelen;</span><br><span class="line">	<span class="keyword">while</span> ( (readlen = <span class="built_in">fread</span>(buf, <span class="number">1</span>, <span class="number">256</span>, fp1)) &gt; <span class="number">0</span> ) <span class="comment">//如果读到数据，则大于0 </span></span><br><span class="line">	&#123;</span><br><span class="line">		writelen = <span class="built_in">fwrite</span>(buf, <span class="number">1</span>, readlen, fp2);</span><br><span class="line">		<span class="keyword">if</span> (readlen != readlen)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="built_in">BadCpyFile</span>();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">fclose</span>(fp1);</span><br><span class="line">	<span class="built_in">fclose</span>(fp2);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		 <span class="comment">//filecopy(&quot;c:/1.txt&quot;,&quot;c:/2.txt&quot;);</span></span><br><span class="line">		<span class="comment">// filecopy(&quot;c:/1.txt&quot;,&quot;c:/2.txt&quot;);</span></span><br><span class="line">		 <span class="built_in">filecopy</span>(<span class="string">&quot;c:/1.txt&quot;</span>,<span class="string">&quot;c:/2.txt&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">int</span> e)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：%d \n&quot;</span>, e);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">const</span> <span class="type">char</span> * e)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：%s \n&quot;</span>, e);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> ( BadSrcFile *e)</span><br><span class="line">	&#123;</span><br><span class="line">		 e-&gt;<span class="built_in">toString</span>();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：打开源文件时出错!\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> ( BadSrcFile &amp;e)</span><br><span class="line">	&#123;</span><br><span class="line">		e.<span class="built_in">toString</span>();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：打开源文件时出错!\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> ( BadDestFile e)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：打开目标文件时出错!\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> ( BadCpyFile e)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生异常：copy时出错!\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span>(...) <span class="comment">//抓漏网之鱼</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;发生了未知异常! 抓漏网之鱼\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//class BadSrcFile &#123;&#125;;</span></span><br><span class="line">	<span class="comment">//class BadDestFile &#123;&#125;;</span></span><br><span class="line">	<span class="comment">//class BadCpyFile &#123;&#125;;;	</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、异常的层次结构-继承在异常中的应用-–-创建自己的异常类"><a href="#5、异常的层次结构-继承在异常中的应用-–-创建自己的异常类" class="headerlink" title="5、异常的层次结构(继承在异常中的应用) – 创建自己的异常类"></a>5、异常的层次结构(继承在异常中的应用) – 创建自己的异常类</h2><h3 id="5-1、exception类"><a href="#5-1、exception类" class="headerlink" title="5.1、exception类"></a>5.1、exception类</h3><p>C++异常的主要目的是为设计容错程序提供语言级支持，即异常使得在程序设计中包含错误处理功能更容易，以免事后采取一些严格的错误处理方式。异常的灵活性和相对方便性激励着程序员在条件允许的情况下在程序设计中加入错误处理功能。总之，异常是这样一种特性：类似于类，可以改变您的编程方式。 </p>
+<p>较新的C++编译器将异常合并到语言中。例如，为支持该语言，exception头文件（以前为exception.h或except.h）定义了exception类， C++可以把它用作其他异常类的基类。代码可以引发exception异常，也可以将exception类用作基类。</p>
+<ul>
+<li><p>异常派生</p>
+</li>
+<li><p>异常中的数据：数据成员</p>
+</li>
+<li><p>按引用传递异常，在异常中使用虚函数</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// out_of_range</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;iostream&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span>  </span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Teacher</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Teacher</span>(<span class="type">int</span> age)  <span class="comment">//构造函数, 通过异常机制 处理错误</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (age &gt; <span class="number">100</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="built_in">out_of_range</span>(<span class="string">&quot;年龄太大&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">this</span>-&gt;age = age;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function">Teacher <span class="title">t1</span><span class="params">(<span class="number">102</span>)</span></span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (out_of_range e)</span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		cout &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	exception e;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义异常类</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyException</span> : <span class="keyword">public</span> exception</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">MyException</span>(<span class="type">const</span> <span class="type">char</span> *p)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;m_p = p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">const</span> <span class="type">char</span> *  <span class="title">what</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;MyException: 类型&quot;</span> &lt;&lt; m_p &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">return</span> m_p;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *m_p;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">testMyExcept</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">throw</span> <span class="built_in">MyException</span>(<span class="string">&quot;函数异常&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">testMyExcept</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (MyException &amp; e)</span><br><span class="line">	&#123;</span><br><span class="line">		e.<span class="built_in">what</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (...)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;未知 类型 &quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2、标准程序库异常"><a href="#5-2、标准程序库异常" class="headerlink" title="5.2、标准程序库异常"></a>5.2、标准程序库异常</h3><p>C++标准提供了一组标准异常类，这些类以基类Exception开始，标准程序库抛出的所有异常，都派生与该基类，这些类构成如图所示的异常类的派生继承关系。该继承类提供一个成员函数what()，用于返回错误信息（返回类型为const char）。在Exception类中，what()函数的声明如下：<br>virtual const char* what() const throw();<br>该函数可以在派生类中重新定义 </p>
+<p> 标准异常类的继承关系如下：</p>
+<p><img src="https://pic.imgdb.cn/item/630f14f416f2c2beb1a2343f.png"></p>
+<p>下表中列出了各个具体异常类的含义及定义它们的头文件。runtime_error和logic_error是一些具体的异常类的基类，它们分别表示两大异常类。logic_error表示那些可以在程序中被预先检测到的异常，也就是说如果小心地编写程序，这类异常能够避免；而runtime_error则表示那些难以被预先检测的异常。 </p>
+<pre><code>                                                C++标准库各种异常类所代表的的异常
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>异常类</th>
+<th>头文件</th>
+<th>异常的含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bad_alloc</td>
+<td>exception</td>
+<td>用 new 动态分配空间失败</td>
+</tr>
+<tr>
+<td>bad_cast</td>
+<td>new</td>
+<td>执行dynamic_cast失败</td>
+</tr>
+<tr>
+<td>bad_typeid</td>
+<td>typeinfo</td>
+<td>对某个空指针p执行 typeid(*p)</td>
+</tr>
+<tr>
+<td>bad_exception</td>
+<td>typeinfo</td>
+<td>当某个函数fun()因在执行过程中抛出了异常声明所不允许的异常而调用unexpected()函数时，若unexpected()函数又一次抛出了fun()的异常声明所不允许的异常，且fun()的异常声明列表中有bad_exception，则会有一个bad_exception异常在fun()的调用点被抛出</td>
+</tr>
+<tr>
+<td>ios_base::failure</td>
+<td>ios</td>
+<td>用来表示 C++ 的输入输出流执行过程中发生的错误</td>
+</tr>
+<tr>
+<td>underflow_error</td>
+<td>stdexcept</td>
+<td>算术运算时向下溢出</td>
+</tr>
+<tr>
+<td>overflow_error</td>
+<td>stdexcept</td>
+<td>算术运算时向上溢出</td>
+</tr>
+<tr>
+<td>range_error</td>
+<td>stdexcept</td>
+<td>内部计算时发生作用域的错误</td>
+</tr>
+<tr>
+<td>out_of_range</td>
+<td>stdexcept</td>
+<td>表示一个参数值不在允许的范围之内</td>
+</tr>
+<tr>
+<td>length_error</td>
+<td>stdexcept</td>
+<td>尝试创建一个长度超过最大允许值的对象</td>
+</tr>
+<tr>
+<td>invalid_argument</td>
+<td>stdexcept</td>
+<td>表示向函数传入无效参数</td>
+</tr>
+<tr>
+<td>domain_error</td>
+<td>stdexcept</td>
+<td>执行一段程序所需要的先决条件不满足</td>
+</tr>
+</tbody></table>
+<p> 下面的例子使用了标准程序库提供的异常类。<br>三角形面积计算<br>        编写一个计算三角形面积的函数，函数的参数为三角形三边长 a，b，c，可以用 Heron 公式计算：</p>
+<p><img src="https://pic.imgdb.cn/item/630f186416f2c2beb1a4e376.jpg"></p>
+<p>  在计算三角形面积的函数中需要判断输入的参数 a，b，c 是否构成一个三角形，若三角形三个边长不能构成三角形，则需要抛出异常。 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//==========================================										   	</span></span><br><span class="line"><span class="comment">//	Filename : 三角形面积计算						   	</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//给出三角形三边长，计算三角形面积</span></span><br><span class="line"><span class="function"><span class="type">double</span> <span class="title">Area</span><span class="params">(<span class="type">double</span> a, <span class="type">double</span> b, <span class="type">double</span> c)</span> <span class="title">throw</span> <span class="params">(invalid_argument)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//判断三角形三边长是否为正</span></span><br><span class="line">	<span class="keyword">if</span> (a &lt;= <span class="number">0</span> || b &lt;= <span class="number">0</span> || c &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="built_in">invalid_argument</span>(<span class="string">&quot;the side length should be positive&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//判断三边长是否满足三角不等式</span></span><br><span class="line">	<span class="keyword">if</span> (a + b &lt;= c || a + c &lt;= b || b + c &lt;= a)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="built_in">invalid_argument</span>(<span class="string">&quot;the side length should fit the triangle inequation&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//由 Heron 公式计算三角形面积</span></span><br><span class="line">	<span class="type">double</span> s = (a + b + c) / <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>(s * (s - a) * (s - b) * (s - c));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">double</span> a, b, c;			<span class="comment">//三角形三边长</span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Please input the side lengths of a triangle:&quot;</span>;</span><br><span class="line">	cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">double</span> s = <span class="built_in">Area</span>(a, b, c);</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Area = &quot;</span> &lt;&lt; s &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (exception &amp;e)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Error:&quot;</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>程序运行结果 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input the side lengths of a triangle:3 4 5</span><br><span class="line">Area = 6</span><br></pre></td></tr></table></figure>
+
+<p>程序运行结果 2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input the side lengths of a triangle:0 5 5</span><br><span class="line">Error:the side length should be positive</span><br></pre></td></tr></table></figure>
+
+<p>程序运行结果 3：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input the side lengths of a triangle:<span class="number">1</span> <span class="number">2</span> <span class="number">4</span></span><br><span class="line">Error:the side length should fit the triangle inequation</span><br></pre></td></tr></table></figure>
+
+<p>C++ 标准程序库对于异常处理做了如下保证：C++ 标准程序库在面对异常时，保证不会发生资源泄露，也不会破坏容器的不变特性。</p>
+<p>1）对于以结点实现为基础的容器，如 list，set，multiset，map 和 multimap，如果结点构造失败，容器应当保持不变。同样需要保证删除结点操作不会失败。在顺序关联容器中插入多个元素时，为保证数据的有序排列，应当保证如果插入不成功，则容器元素不做任何改动。对于删除操作，确保操作成功。比如，对于列表容器，除了 remove()，remove_if()，merge()，sort() 和 unique() 之外的所有操作，要么成功，要么对容器不作任何改动。</p>
+<p>2）对于以数组实现为基础的容器，如 vector 和 deque，在插入和删除元素时，由于有时需要调用复制构造函数和复制赋值运算符，当这些操作失败而抛出异常时，容器的不变性能不能被保证。除此以外，对于这些容器的不变特性的保证程度以结点实现为基础的容器相同。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%A0%87%E5%87%86IO%E6%B5%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            C++输入输出-标准IO流
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%A4%9A%E6%80%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++面向对象-多态</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

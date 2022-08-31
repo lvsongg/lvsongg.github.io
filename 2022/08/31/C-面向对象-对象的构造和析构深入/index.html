@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++面向对象-对象的构造和析构深入 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-面向对象-对象的构造和析构深入"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++面向对象-对象的构造和析构深入
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E6%B7%B1%E5%85%A5/" class="article-date">
+  <time datetime="2022-08-31T02:42:52.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">20 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="面向对象–对象的构造和析构深入"><a href="#面向对象–对象的构造和析构深入" class="headerlink" title="面向对象–对象的构造和析构深入"></a>面向对象–对象的构造和析构深入</h1><h2 id="1、浅拷贝和深拷贝"><a href="#1、浅拷贝和深拷贝" class="headerlink" title="1、浅拷贝和深拷贝"></a>1、浅拷贝和深拷贝</h2><h3 id="1-1、浅拷贝"><a href="#1-1、浅拷贝" class="headerlink" title="1.1、浅拷贝"></a>1.1、浅拷贝</h3><p>同一类型的对象之间可以赋值，使得两个对象的成员变量的值相同，两个对象仍然是独立的两个对象，这种情况被称为浅拷贝。<span id="more"></span></p>
+<p>一般情况下，浅拷贝没有任何副作用，但是当类中有指针，并且指针指向动态分配的内存空间，析构函数做了动态内存释放的处理，会导致内存问题。</p>
+<p><img src="https://pic.imgdb.cn/item/630ecb9816f2c2beb176d3b4.jpg"></p>
+<h3 id="1-2、深拷贝"><a href="#1-2、深拷贝" class="headerlink" title="1.2、深拷贝"></a>1.2、深拷贝</h3><p>当类中有指针，并且此指针有动态分配空间，析构函数做了释放处理，往往需要自定义拷贝构造函数，自行给指针动态分配空间，深拷贝。</p>
+<p><img src="https://pic.imgdb.cn/item/630ecba616f2c2beb176dbec.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">char</span>* name,<span class="type">int</span> age)&#123;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(name) + <span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName,name);</span><br><span class="line">		mAge = age;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//增加拷贝构造函数</span></span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">const</span> Person&amp; person)&#123;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(person.pName) + <span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, person.pName);</span><br><span class="line">		mAge = person.mAge;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Person</span>()&#123;</span><br><span class="line">		<span class="keyword">if</span> (pName != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			<span class="built_in">free</span>(pName);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">char</span>* pName;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="function">Person <span class="title">p1</span><span class="params">(<span class="string">&quot;Edward&quot;</span>,<span class="number">30</span>)</span></span>;</span><br><span class="line">	<span class="comment">//用对象p1初始化对象p2,调用c++提供的默认拷贝构造函数</span></span><br><span class="line">	Person p2 = p1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、多个对象的构造和析构"><a href="#2、多个对象的构造和析构" class="headerlink" title="2、多个对象的构造和析构"></a>2、多个对象的构造和析构</h2><h3 id="2-1、初始化列表"><a href="#2-1、初始化列表" class="headerlink" title="2.1、初始化列表"></a>2.1、初始化列表</h3><p>构造函数和其他函数不同，除了有名字，参数列表，函数体之外还有初始化列表。</p>
+<p>初始化列表简单使用:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 0</span></span><br><span class="line">	<span class="comment">//传统方式初始化</span></span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">int</span> a,<span class="type">int</span> b,<span class="type">int</span> c)&#123;</span><br><span class="line">		mA = a;</span><br><span class="line">		mB = b;</span><br><span class="line">		mC = c;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="comment">//初始化列表方式初始化</span></span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c):<span class="built_in">mA</span>(a),<span class="built_in">mB</span>(b),<span class="built_in">mC</span>(c)&#123;&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">PrintPerson</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;mA:&quot;</span> &lt;&lt; mA &lt;&lt; endl;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;mB:&quot;</span> &lt;&lt; mB &lt;&lt; endl;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;mC:&quot;</span> &lt;&lt; mC &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> mA;</span><br><span class="line">	<span class="type">int</span> mB;</span><br><span class="line">	<span class="type">int</span> mC;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>对象初始化列表出现原因</p>
+<p>1）必须这样做：</p>
+<p>如果有一个类成员，它本身是一个类或者是一个结构，而且这个成员它只有一个带参数的构造函数，没有默认构造函数。这时要对这个类成员进行初始化，就必须调用这个类成员的带参数的构造函数，如果没有初始化列表，那么他将无法完成第一步，就会报错。</p>
+<p>2）类成员中若有const修饰，必须在对象初始化的时候，给const int m 赋值</p>
+<p>当类成员中含有一个const对象时，或者是一个引用时，他们也必须要通过成员初始化列表进行初始化，</p>
+<p>因为这两种对象要在声明后马上初始化，而在构造函数中，做的是对他们的赋值，这样是不被允许的。</p>
+<p>注意：初始化成员列表(参数列表)只能在构造函数使用。成员变量的初始化顺序与声明的顺序相关，与在初始化列表中的顺序无关，初始化列表先于构造函数的函数体执行。</p>
+<h3 id="2-2、类对象作为成员"><a href="#2-2、类对象作为成员" class="headerlink" title="2.2、类对象作为成员"></a>2.2、类对象作为成员</h3><p>在类中定义的数据成员一般都是基本的数据类型。但是类中的成员也可以是对象，叫做对象成员。</p>
+<p>C++中对对象的初始化是非常重要的操作，当创建一个对象的时候，c++编译器必须确保调用了所有子对象的构造函数。如果所有的子对象有默认构造函数，编译器可以自动调用他们。但是如果子对象没有默认的构造函数，或者想指定调用某个构造函数怎么办？</p>
+<p>那么是否可以在类的构造函数直接调用子类的属性完成初始化呢？但是如果子类的成员属性是私有的，是没有办法访问并完成初始化的。</p>
+<p>解决办法非常简单：对于子类调用构造函数，c++为此提供了专门的语法，即构造函数初始化列表。</p>
+<p>当调用构造函数时，首先按各对象成员在类定义中的顺序（和参数列表的顺序无关）依次调用它们的构造函数，对这些对象初始化，最后再调用本身的函数体。也就是说，先调用对象成员的构造函数，再调用本身的构造函数。</p>
+<p>析构函数和构造函数调用顺序相反，先构造，后析构。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//汽车类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Car</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Car 默认构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		mName = <span class="string">&quot;大众汽车&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">Car</span>(string name)&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Car 带参数构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		mName = name;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Car</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Car 析构函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	string mName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//拖拉机</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Tractor</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Tractor</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Tractor 默认构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		mName = <span class="string">&quot;爬土坡专用拖拉机&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">Tractor</span>(string name)&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Tractor 带参数构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		mName = name;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Tractor</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Tractor 析构函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	string mName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//人类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 1</span></span><br><span class="line">	<span class="comment">//类mCar不存在合适的构造函数</span></span><br><span class="line">	<span class="built_in">Person</span>(string name)&#123;</span><br><span class="line">		mName = name;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="comment">//初始化列表可以指定调用构造函数</span></span><br><span class="line">	<span class="built_in">Person</span>(string carName, string tracName, string name) : <span class="built_in">mTractor</span>(tracName), <span class="built_in">mCar</span>(carName), <span class="built_in">mName</span>(name)&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Person 构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">GoWorkByCar</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; mName &lt;&lt; <span class="string">&quot;开着&quot;</span> &lt;&lt; mCar.mName &lt;&lt; <span class="string">&quot;去上班!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">GoWorkByTractor</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; mName &lt;&lt; <span class="string">&quot;开着&quot;</span> &lt;&lt; mTractor.mName &lt;&lt; <span class="string">&quot;去上班!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Person</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Person 析构函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	string mName;</span><br><span class="line">	Car mCar;</span><br><span class="line">	Tractor mTractor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//Person person(&quot;宝马&quot;, &quot;东风拖拉机&quot;, &quot;赵四&quot;);</span></span><br><span class="line">	<span class="function">Person <span class="title">person</span><span class="params">(<span class="string">&quot;刘能&quot;</span>)</span></span>;</span><br><span class="line">	person.<span class="built_in">GoWorkByCar</span>();</span><br><span class="line">	person.<span class="built_in">GoWorkByTractor</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、explicit关键字"><a href="#3、explicit关键字" class="headerlink" title="3、explicit关键字"></a>3、explicit关键字</h2><p>c++提供了关键字explicit，禁止通过构造函数进行的隐式转换。声明为explicit的构造函数不能在隐式转换中使用。</p>
+<ul>
+<li><p>explicit用于修饰构造函数,防止隐式转化。</p>
+</li>
+<li><p>是针对单参数的构造函数(或者除了第一个参数外其余参数都有默认值的多参构造)而言。</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyString</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">explicit</span> <span class="title">MyString</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;MyString(int n)!&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">MyString</span>(<span class="type">const</span> <span class="type">char</span>* str)&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;MyString(const char* str)&quot;</span> &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//给字符串赋值？还是初始化？</span></span><br><span class="line">	<span class="comment">//MyString str1 = 1; </span></span><br><span class="line">	<span class="function">MyString <span class="title">str2</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//寓意非常明确，给字符串赋值</span></span><br><span class="line">	MyString str3 = <span class="string">&quot;abcd&quot;</span>;</span><br><span class="line">	<span class="function">MyString <span class="title">str4</span><span class="params">(<span class="string">&quot;abcd&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、动态对象创建"><a href="#4、动态对象创建" class="headerlink" title="4、动态对象创建"></a>4、动态对象创建</h2><p>在软件开发过程中，常常需要动态地分配和撤销内存空间，例如对动态链表中结点的插入与删除。在C语言中是利用库函数malloc和free来分配和撤销内存空间的。C++提供了较简便而功能较强的运算符new和delete来取代malloc和free函数。</p>
+<p>注意： new和delete是运算符，不是函数，因此执行效率高</p>
+<h3 id="4-1、C动态分配内存方法"><a href="#4-1、C动态分配内存方法" class="headerlink" title="4.1、C动态分配内存方法"></a>4.1、C动态分配内存方法</h3><p>为了在运行时动态分配内存，c在他的标准库中提供了一些函数,malloc以及它的变种calloc和realloc,释放内存的free,这些函数是有效的、但是原始的，需要程序员理解和小心使用。为了使用c的动态内存分配函数在堆上创建一个类的实例，必须这样做:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Person</span>()&#123;</span><br><span class="line">		mAge = <span class="number">20</span>;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(<span class="string">&quot;john&quot;</span>)+<span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, <span class="string">&quot;john&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">Init</span><span class="params">()</span></span>&#123;</span><br><span class="line">		mAge = <span class="number">20</span>;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(<span class="string">&quot;john&quot;</span>)+<span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, <span class="string">&quot;john&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">Clean</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (pName != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			<span class="built_in">free</span>(pName);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">	<span class="type">char</span>* pName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//分配内存</span></span><br><span class="line">	Person* person = (Person*)<span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(Person));</span><br><span class="line">	<span class="keyword">if</span>(person == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//调用初始化函数</span></span><br><span class="line">	person-&gt;<span class="built_in">Init</span>();</span><br><span class="line">	<span class="comment">//清理对象</span></span><br><span class="line">	person-&gt;<span class="built_in">Clean</span>();</span><br><span class="line">	<span class="comment">//释放person对象</span></span><br><span class="line">	<span class="built_in">free</span>(person);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码，注意：</p>
+<ol>
+<li><p>程序员必须确定对象的长度。</p>
+</li>
+<li><p>malloc返回一个 void* 指针，C++不允许将 void* 赋值给其他任何指针，必须强转转换。</p>
+</li>
+<li><p>malloc可能申请内存失败，所以必须判断返回值来确保内存分配成功。</p>
+</li>
+</ol>
+<p>用户在使用对象之前必须记住对他初始化，构造函数不能显示调用初始化(构造函数是由编译器调用)，用户有可能忘记调用初始化函数。</p>
+<p>C的动态内存分配函数太复杂，容易令人混淆，是不可接受的C++中推荐使用运算符new 和 delete。</p>
+<h3 id="4-2、new-和-delete"><a href="#4-2、new-和-delete" class="headerlink" title="4.2、new 和 delete"></a>4.2、new 和 delete</h3><p>C++中解决动态内存分配的方案是把创建一个对象所需要的操作都结合在一个称为new的运算符里。当用new创建一个对象时，它就在堆里为对象分配内存并调用构造函数完成初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Person* person = <span class="keyword">new</span> Person;</span><br><span class="line">相当于:</span><br><span class="line">Person* person = (Person*)<span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(Person));</span><br><span class="line">	<span class="keyword">if</span>(person == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">person-&gt;<span class="built_in">Init</span>();</span><br></pre></td></tr></table></figure>
+
+<p>new操作符能确定在调用构造函数初始化之前内存分配是成功的，所有不用显式确定调用是否成功。在堆里创建对象的过程变得简单了，只需要一个简单的表达式，它带有内置的长度计算、类型转换和安全检查。这样在堆创建一个对象和在栈里创建对象一样简单。</p>
+<p>new表达式的反面是delete表达式。delete表达式先调用析构函数，然后释放内存。正如new表达式返回一个指向对象的指针一样，delete需要一个对象的地址。delete只适用于由new创建的对象。如果使用一个由malloc或者calloc或者realloc创建的对象使用delete,这个行为是未定义的。因为大多数new和delete的实现机制都使用了malloc和free,所以很可能没有调用析构函数就释放了内存。如果正在删除的对象的指针是NULL,将不发生任何事，因此建议在删除指针后，立即把指针赋值为NULL，以免对它删除两次，对一些对象删除两次可能会产生某些问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Person</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;无参构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(<span class="string">&quot;undefined&quot;</span>) + <span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, <span class="string">&quot;undefined&quot;</span>);</span><br><span class="line">		mAge = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">char</span>* name, <span class="type">int</span> age)&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;有参构造函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(name) + <span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, name);</span><br><span class="line">		mAge = age;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">ShowPerson</span><span class="params">()</span></span>&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Name:&quot;</span> &lt;&lt; pName &lt;&lt; <span class="string">&quot; Age:&quot;</span> &lt;&lt; mAge &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Person</span>()&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;析构函数!&quot;</span> &lt;&lt; endl;</span><br><span class="line">		<span class="keyword">if</span> (pName != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			<span class="keyword">delete</span> pName;</span><br><span class="line">			pName = <span class="literal">NULL</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">char</span>* pName;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	Person* person1 = <span class="keyword">new</span> Person;</span><br><span class="line">	Person* person2 = <span class="keyword">new</span> <span class="built_in">Person</span>(<span class="string">&quot;John&quot;</span>,<span class="number">33</span>);</span><br><span class="line"></span><br><span class="line">	person1-&gt;<span class="built_in">ShowPerson</span>();</span><br><span class="line">	person2-&gt;<span class="built_in">ShowPerson</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">delete</span> person1;</span><br><span class="line">	<span class="keyword">delete</span> person2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>new和delete运算符使用的一般格式为：</p>
+<p><img src="https://pic.imgdb.cn/item/630ecc0016f2c2beb1770912.jpg"></p>
+<p>用new分配数组空间时不能指定初值。如果由于内存不足等原因而无法正常分配空间，则new会返回一个空指针NULL，用户可以根据该指针的值判断分配空间是否成功。</p>
+<p>new运算符的例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="type">int</span>;  <span class="comment">//开辟一个存放整数的存储空间，返回一个指向该存储空间的地址(即指针)</span></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">100</span>);  <span class="comment">//开辟一个存放整数的空间，并指定该整数的初值为100，返回一个指向该存储空间的地址</span></span><br><span class="line"><span class="keyword">new</span> <span class="type">char</span>[<span class="number">10</span>];  <span class="comment">//开辟一个存放字符数组(包括10个元素)的空间，返回首元素的地址</span></span><br><span class="line"><span class="keyword">new</span> <span class="type">int</span>[<span class="number">5</span>][<span class="number">4</span>];  <span class="comment">//开辟一个存放二维整型数组(大小为5*4)的空间，返回首元素的地址</span></span><br><span class="line"><span class="type">float</span> *p=<span class="keyword">new</span> <span class="built_in">float</span> (<span class="number">3.14159</span>);  <span class="comment">//开辟一个存放单精度数的空间，并指定该实数的初值为//3.14159，将返回的该空间的地址赋给指针变量p</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic.imgdb.cn/item/630ecc1916f2c2beb17713f9.jpg"></p>
+<p>使用new和delete在堆上创建数组</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建字符数组</span></span><br><span class="line"><span class="type">char</span>* pStr = <span class="keyword">new</span> <span class="type">char</span>[<span class="number">100</span>];</span><br><span class="line"><span class="comment">//创建整型数组</span></span><br><span class="line"><span class="type">int</span>* pArr1 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">100</span>]; </span><br><span class="line"><span class="comment">//创建整型数组并初始化</span></span><br><span class="line"><span class="type">int</span>* pArr2 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">10</span>]&#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放数组内存</span></span><br><span class="line"><span class="keyword">delete</span>[] pStr;</span><br><span class="line"><span class="keyword">delete</span>[] pArr1;</span><br><span class="line"><span class="keyword">delete</span>[] pArr2;</span><br></pre></td></tr></table></figure>
+
+<p>当创建一个对象数组的时候，必须对数组中的每一个对象调用构造函数，除了在栈上可以聚合初始化，必须提供一个默认的构造函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Person</span>()&#123;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">strlen</span>(<span class="string">&quot;undefined&quot;</span>) + <span class="number">1</span>);</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, <span class="string">&quot;undefined&quot;</span>);</span><br><span class="line">		mAge = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">char</span>* name, <span class="type">int</span> age)&#123;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(name));</span><br><span class="line">		<span class="built_in">strcpy</span>(pName, name);</span><br><span class="line">		mAge = age;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Person</span>()&#123;</span><br><span class="line">		<span class="keyword">if</span> (pName != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			<span class="keyword">delete</span> pName;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">char</span>* pName;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//栈聚合初始化</span></span><br><span class="line">	Person person[] = &#123; <span class="built_in">Person</span>(<span class="string">&quot;john&quot;</span>, <span class="number">20</span>), <span class="built_in">Person</span>(<span class="string">&quot;Smith&quot;</span>, <span class="number">22</span>) &#125;;</span><br><span class="line">	cout &lt;&lt; person[<span class="number">1</span>].pName &lt;&lt; endl;</span><br><span class="line">    <span class="comment">//创建堆上对象数组必须提供构造函数</span></span><br><span class="line">	Person* workers = <span class="keyword">new</span> Person[<span class="number">20</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果对一个void*指针执行delete操作，这将可能成为一个程序错误，除非指针指向的内容是非常简单的，因为它将不执行析构函数.以下代码未调用析构函数，导致可用内存减少。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Person</span>(<span class="type">char</span>* name, <span class="type">int</span> age)&#123;</span><br><span class="line">		pName = (<span class="type">char</span>*)<span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(name));</span><br><span class="line">		<span class="built_in">strcpy</span>(pName,name);</span><br><span class="line">		mAge = age;</span><br><span class="line">	&#125;</span><br><span class="line">	~<span class="built_in">Person</span>()&#123;</span><br><span class="line">		<span class="keyword">if</span> (pName != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			<span class="keyword">delete</span> pName;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">char</span>* pName;</span><br><span class="line">	<span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="type">void</span>* person = <span class="keyword">new</span> <span class="built_in">Person</span>(<span class="string">&quot;john&quot;</span>,<span class="number">20</span>);</span><br><span class="line">	<span class="keyword">delete</span> person;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3、动态创建对象小结"><a href="#4-3、动态创建对象小结" class="headerlink" title="4.3、动态创建对象小结"></a>4.3、动态创建对象小结</h3><p>1）问题：malloc、free和new、delete可以混搭使用吗？也就是说malloc分配的内存，可以调用delete吗？通过new创建的对象，可以调用free来释放吗？不可以</p>
+<ul>
+<li><p>malloc free函数，是c关键字</p>
+</li>
+<li><p>new delete 操作符，是c++的关键字</p>
+</li>
+<li><p>new 在堆上分配内存 （分配基础类型 、分配数组类型、分配对象） delete 释放内存</p>
+</li>
+<li><p>malloc不会调用类的构造函数，free不会调用类的析构函数</p>
+</li>
+</ul>
+<p>2）使用new和delete采用相同形式</p>
+<p>​	以下代码有没有什么问题：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person* person = <span class="keyword">new</span> Person[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">delete</span> person;</span><br></pre></td></tr></table></figure>
+
+<p>使用了new也搭配使用了delete，问题在于Person有10个对象，那么其他9个对象可能没有调用析构函数，也就是说其他9个对象可能删除不完全，因为它们的析构函数没有被调用。</p>
+<p>现在清楚使用new的时候发生了两件事： 一、分配内存；二、调用构造函数，那么调用delete的时候也有两件事：一、析构函数；二、释放内存。</p>
+<p>那么刚才那段代码最大的问题在于：person指针指向的内存中到底有多少个对象，因为这个决定应该有多少个析构函数应该被调用。换句话说，person指针指向的是一个单一的对象还是一个数组对象，由于单一对象和数组对象的内存布局是不同的。更明确的说，数组所用的内存通常还包括“数组大小记录”，使得delete的时候知道应该调用几次析构函数。单一对象的话就没有这个记录。单一对象和数组对象的内存布局可理解为下图:</p>
+<p><img src="https://pic.imgdb.cn/item/630ecc4616f2c2beb1773102.jpg"></p>
+<p>本图只是为了说明，编译器不一定如此实现，但是很多编译器是这样做的。</p>
+<p>当使用一个delete的时候，必须让delete知道指针指向的内存空间中是否存在一个“数组大小记录”的办法就是告诉它。当使用delete[]，那么delete就知道是一个对象数组，从而清楚应该调用几次析构函数。</p>
+<p><em><strong>结论：</strong></em></p>
+<p><strong>如果在new表达式中使用[]，必须在相应的delete表达式中也使用[]。如果在new表达式中不使用[]，一定不要在相应的delete表达式中使用[]。</strong></p>
+<h2 id="5、静态成员"><a href="#5、静态成员" class="headerlink" title="5、静态成员"></a>5、静态成员</h2><p>在类定义中，它的成员（包括成员变量和成员函数），这些成员可以用关键字static声明为静态的，称为静态成员。不管这个类创建了多少个对象，静态成员只有一个拷贝，这个拷贝被所有属于这个类的对象共享。</p>
+<h3 id="5-1、静态成员变量"><a href="#5-1、静态成员变量" class="headerlink" title="5.1、静态成员变量"></a>5.1、静态成员变量</h3><p>在一个类中，若将一个成员变量声明为static，这种成员称为静态成员变量。与一般的数据成员不同，无论建立了多少个对象，都只有一个静态数据的拷贝。静态成员变量，属于某个类，所有对象共享。静态变量，是在编译阶段就分配空间，对象还没有创建时，就已经分配空间。</p>
+<ul>
+<li><p>关键字static可以用于说明一个类的成员，静态成员提供了一个同类对象的共享机制</p>
+</li>
+<li><p>把一个类的成员说明为 static时，这个类无论有多少个对象被创建，这些对象共享这个static成员</p>
+</li>
+<li><p>静态成员局部于类，它不是对象成员</p>
+</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/630ecc7d16f2c2beb17750dd.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//类的静态成员属性</span></span><br><span class="line">	<span class="type">static</span> <span class="type">int</span> sNum;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">static</span> <span class="type">int</span> sOther;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//类外初始化，初始化时不加static</span></span><br><span class="line"><span class="type">int</span> Person::sNum = <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> Person::sOther = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//1. 通过类名直接访问</span></span><br><span class="line">	Person::sNum = <span class="number">100</span>;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Person::sNum:&quot;</span> &lt;&lt; Person::sNum &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2. 通过对象访问</span></span><br><span class="line">	Person p1, p2;</span><br><span class="line">	p1.sNum = <span class="number">200</span>;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;p1.sNum:&quot;</span> &lt;&lt; p1.sNum &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;p2.sNum:&quot;</span> &lt;&lt; p2.sNum &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//3. 静态成员也有访问权限，类外不能访问私有成员</span></span><br><span class="line">	<span class="comment">//cout &lt;&lt; &quot;Person::sOther:&quot; &lt;&lt; Person::sOther &lt;&lt; endl;</span></span><br><span class="line">	Person p3;</span><br><span class="line">	<span class="comment">//cout &lt;&lt; &quot;p3.sOther:&quot; &lt;&lt; p3.sOther &lt;&lt; endl;</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">class</span>  <span class="title class_">counter</span></span><br><span class="line">&#123; <span class="keyword">public</span> :</span><br><span class="line">      <span class="built_in">counter</span> (<span class="type">int</span> a) &#123; mem = a; &#125;</span><br><span class="line">      <span class="type">int</span> mem;		<span class="comment">//公有数据成员</span></span><br><span class="line">      <span class="type">static</span>  <span class="type">int</span>  Smem ;	<span class="comment">//公有静态数据成员</span></span><br><span class="line">&#125; ;</span><br><span class="line"><span class="type">int</span>  counter :: Smem = <span class="number">1</span> ;	<span class="comment">//初始值为1 </span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;   <span class="function">counter <span class="title">c</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line">    <span class="type">int</span> i ;</span><br><span class="line">    <span class="keyword">for</span>( i = <span class="number">0</span> ; i &lt; <span class="number">5</span> ; i ++ )</span><br><span class="line">      &#123; counter::Smem += i ;</span><br><span class="line">         cout &lt;&lt; counter::Smem &lt;&lt; <span class="string">&#x27;\t&#x27;</span> ;  <span class="comment">//访问静态成员变量方法2</span></span><br><span class="line">      &#125;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;c.Smem = &quot;</span>&lt;&lt;c.Smem&lt;&lt;endl; <span class="comment">//访问静态成员变量方法1</span></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;c.mem = &quot;</span>&lt;&lt;c.mem&lt;&lt;endl;</span><br><span class="line"> 	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2、静态成员函数"><a href="#5-2、静态成员函数" class="headerlink" title="5.2、静态成员函数"></a>5.2、静态成员函数</h3><p>在类定义中，前面有static说明的成员函数称为静态成员函数。静态成员函数使用方式和静态变量一样，同样在对象没有创建前，即可通过类名调用。静态成员函数主要为了访问静态变量，但是，不能访问普通成员变量。</p>
+<p>静态成员函数的意义，不在于信息共享，数据沟通，而在于管理静态数据成员，完成对静态数据成员的封装。</p>
+<ul>
+<li><p>静态成员函数只能访问静态变量，不能访问普通成员变量</p>
+</li>
+<li><p>静态成员函数的使用和静态成员变量一样</p>
+</li>
+<li><p>静态成员函数也有访问权限</p>
+</li>
+<li><p>普通成员函数可访问静态成员变量、也可以访问非经常成员变量</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//普通成员函数可以访问static和non-static成员属性</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">changeParam1</span><span class="params">(<span class="type">int</span> param)</span></span>&#123;</span><br><span class="line">		mParam = param;</span><br><span class="line">		sNum = param;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//静态成员函数只能访问static成员属性</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">changeParam2</span><span class="params">(<span class="type">int</span> param)</span></span>&#123;</span><br><span class="line">		<span class="comment">//mParam = param; //无法访问</span></span><br><span class="line">		sNum = param;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">changeParam3</span><span class="params">(<span class="type">int</span> param)</span></span>&#123;</span><br><span class="line">		<span class="comment">//mParam = param; //无法访问</span></span><br><span class="line">		sNum = param;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> mParam;</span><br><span class="line">	<span class="type">static</span> <span class="type">int</span> sNum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//静态成员属性类外初始化</span></span><br><span class="line"><span class="type">int</span> Person::sNum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//1. 类名直接调用</span></span><br><span class="line">	Person::<span class="built_in">changeParam2</span>(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//2. 通过对象调用</span></span><br><span class="line">	Person p;</span><br><span class="line">	p.<span class="built_in">changeParam2</span>(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//3. 静态成员函数也有访问权限</span></span><br><span class="line">	<span class="comment">//Person::changeParam3(100); //类外无法访问私有静态成员函数</span></span><br><span class="line">	<span class="comment">//Person p1;</span></span><br><span class="line">	<span class="comment">//p1.changeParam3(200);</span></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3、const静态成员属性"><a href="#5-3、const静态成员属性" class="headerlink" title="5.3、const静态成员属性"></a>5.3、const静态成员属性</h3><p>如果一个类的成员，既要实现共享，又要实现不可改变，那就用 static const 修饰。定义静态const数据成员时，最好在类内部初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//static const int mShare = 10;</span></span><br><span class="line">	<span class="type">const</span> <span class="type">static</span> <span class="type">int</span> mShare = <span class="number">10</span>; <span class="comment">//只读区，不可修改</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; Person::mShare &lt;&lt; endl;</span><br><span class="line">	<span class="comment">//Person::mShare = 20;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E6%B7%B1%E5%85%A5/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            C++面向对象机制
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/31/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++面向对象-对象的构造和析构</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++输入输出-标准IO流 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-输入输出-标准IO流"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++输入输出-标准IO流
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%A0%87%E5%87%86IO%E6%B5%81/" class="article-date">
+  <time datetime="2022-08-31T08:00:17.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">23 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C-输入输出–标准IO流"><a href="#C-输入输出–标准IO流" class="headerlink" title="C++输入输出–标准IO流"></a>C++输入输出–标准IO流</h1><h2 id="1、I-x2F-O流的概念和流类库的结构"><a href="#1、I-x2F-O流的概念和流类库的结构" class="headerlink" title="1、I&#x2F;O流的概念和流类库的结构"></a>1、I&#x2F;O流的概念和流类库的结构</h2><p>输入输出：程序的输入指的是从输入文件将数据传送给程序，程序的输出指的是从程序将数据传送给输出文件。<span id="more"></span></p>
+<p>C++输入输出包含以下三个方面的内容：</p>
+<ul>
+<li><p>对系统指定的标准设备的输入和输出。即从键盘输入数据，输出到显示器屏幕。这种输入输出称为标准的输入输出，简称标准I&#x2F;O。</p>
+</li>
+<li><p>以外存磁盘文件为对象进行输入和输出，即从磁盘文件输入数据，数据输出到磁盘文件。以外存文件为对象的输入输出称为文件的输入输出，简称文件I&#x2F;O。</p>
+</li>
+<li><p>对内存中指定的空间进行输入和输出。通常指定一个字符数组作为存储空间(实际上可以利用该空间存储任何信息)。这种输入和输出称为字符串输入输出，简称串I&#x2F;O。</p>
+</li>
+</ul>
+<p>C++的I&#x2F;O对C的发展–类型安全和可扩展性</p>
+<ul>
+<li><p>在C语言中，用printf和scanf进行输入输出，往往不能保证所输入输出的数据是可靠的安全的。在C++的输入输出中，编译系统对数据类型进行严格的检查，凡是类型不正确的数据都不可能通过编译。因此C++的I&#x2F;O操作是类型安全(type safe)的。C++的I&#x2F;O操作是可扩展的，不仅可以用来输入输出标准类型的数据，也可以用于用户自定义类型的数据。</p>
+</li>
+<li><p>C++通过I&#x2F;O类库来实现丰富的I&#x2F;O功能。这样使C++的输人输出明显地优于C 语言中的printf和scanf，但是也为之付出了代价，C++的I&#x2F;O系统变得比较复杂，要掌握许多细节。</p>
+</li>
+<li><p>C++编译系统提供了用于输入输出的iostream类库。iostream这个单词是由3个部 分组成的，即i-o-stream，意为输入输出流。在iostream类库中包含许多用于输入输出的 类。</p>
+</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/630f157b16f2c2beb1a30c98.jpg"></p>
+<h3 id="1-1、I-x2F-O-库文件"><a href="#1-1、I-x2F-O-库文件" class="headerlink" title="1.1、I&#x2F;O 库文件"></a>1.1、I&#x2F;O 库文件</h3><p>ios是抽象基类，由它派生出istream类和ostream类，两个类名中第1个字母i和o分别代表输入(input)和输出(output)。 istream类支持输入操作，ostream类支持输出操作， iostream类支持输入输出操作。iostream类是从istream类和ostream类通过多重继承而派生的类。其继承层次见上图表示。</p>
+<p>C++对文件的输入输出需要用ifstrcam和ofstream类，两个类名中第1个字母i和o分别代表输入和输出，第2个字母f代表文件 (file)。ifstream支持对文件的输入操作， ofstream支持对文件的输出操作。类ifstream继承了类istream，类ofstream继承了类ostream，类fstream继承了 类iostream。</p>
+<p>下列的头文件在 C++ 编程中很重要。</p>
+<table>
+<thead>
+<tr>
+<th align="left">头文件</th>
+<th align="left">函数和描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><iostream></td>
+<td align="left">该文件定义了 <strong>cin、cout、cerr</strong> 和 <strong>clog</strong> 对象，分别对应于标准输入流、标准输出流、非缓冲标准错误流和缓冲标准错误流。</td>
+</tr>
+<tr>
+<td align="left"><iomanip></td>
+<td align="left">该文件通过所谓的参数化的流操纵器（比如 <strong>setw</strong> 和 <strong>setprecision</strong>），来声明对执行标准化 I&#x2F;O 有用的服务。</td>
+</tr>
+<tr>
+<td align="left"><fstream></td>
+<td align="left">该文件为用户控制的文件处理声明服务。</td>
+</tr>
+</tbody></table>
+<p><img src="https://pic.imgdb.cn/item/630f15a116f2c2beb1a32617.jpg"></p>
+<p>在iostream头文件中重载运算符</p>
+<p>“&lt;&lt;”和“&gt;&gt;”本来在C++中是被定义为左位移运算符和右位移运算符的，由于在iostream头文件中对它们进行了重载， 使它们能用作标准类型数据的输入和输出运算符。所以，在用它们的程序中必须用#include命令把iostream包含到程序中。</p>
+<p>  #include <iostream></p>
+<ol>
+<li><blockquote>
+<blockquote>
+<p>a 表示将数据放入a对象中。</p>
+</blockquote>
+</blockquote>
+</li>
+<li><p>&lt;&lt;a 表示将a对象中存储的数据拿出。</p>
+</li>
+</ol>
+<h2 id="2、标准I-x2F-O流"><a href="#2、标准I-x2F-O流" class="headerlink" title="2、标准I&#x2F;O流"></a>2、标准I&#x2F;O流</h2><p>标准I&#x2F;O对象：cin，cout，cerr，clog</p>
+<ul>
+<li><p>cout流对象</p>
+<p>cont是console output的缩写，意为在控制台（终端显示器）的输出。强调几点。</p>
+<ol>
+<li>cout不是C++预定义的关键字，它是ostream流类的对象，在iostream中定义。 顾名思义，流是流动的数据，cout流是流向显示器的数据。cout流中的数据是用流插入运算符“&lt;&lt;”顺序加入的。如果有<br>  cout&lt;&lt;”I “&lt;&lt;”study C++ “&lt;&lt;”very hard. &lt;&lt; “wang bao ming “;</li>
+</ol>
+<p>按顺序将字符串”I “, “study C++ “, “very hard.”插人到cout流中，cout就将它们送到显示器，在显示器上输出字符串”I study C++ very hard.”。cout流是容纳数据的载体，它并不是一个运算符。人们关心的是cout流中的内容，也就是向显示器输出什么。<br>2)用“ccmt&lt;&lt;”输出基本类型的数据时，可以不必考虑数据是什么类型，系统会判断数据的类型，并根据其类型选择调用与之匹配的运算符重 载函数。这个过程都是自动的，用户不必干预。如果在C语言中用prinf函数输出不同类型的数据，必须分别指定相应的输出格式符，十分麻烦，而且容易出 错。C++的I&#x2F;O机制对用户来说，显然是方便而安全的。</p>
+<ol start="3">
+<li>cout流在内存中对应开辟了一个缓冲区，用来存放流中的数据，当向cout流插 人一个endl时，不论缓冲区是否已满，都立即输出流中所有数据，然后插入一个换行符， 并刷新流（清空缓冲区）。注意如果插人一个换行符”\n“（如cout&lt;&lt;a&lt;&lt;”\n”），则只输出和换行，而不刷新cout 流(但并不是所有编译系统都体现出这一区别）。</li>
+<li>在iostream中只对”&lt;&lt;”和”&gt;&gt;”运算符用于标准类型数据的输入输出进行了重载，但未对用户声明的类型数据的输入输出 进行重载。如果用户声明了新的类型，并希望用”&lt;&lt;”和”&gt;&gt;”运算符对其进行输入输出，按照重运算符重载来做。</li>
+</ol>
+</li>
+<li><p>cerr流对象</p>
+<p>cerr流对象是标准错误流，cerr流已被指定为与显示器关联。cerr的 作用是向标准错误设备(standard error device)输出有关出错信息。cerr与标准输出流cout的作用和用法差不多。但有一点不同：cout流通常是传送到显示器输出，但也可以被重定向 输出到磁盘文件，而cerr流中的信息只能在显示器输出。当调试程序时，往往不希望程序运行时的出错信息被送到其他文件，而要求在显示器上及时输出，这时 应该用cerr。cerr流中的信息是用户根据需要指定的。</p>
+</li>
+<li><p>clog流对象</p>
+<p>clog流对象也是标准错误流，它是console log的缩写。它的作用和cerr相同，都是在终端显示器上显示出错信息。区别：cerr是不经过缓冲区，直接向显示器上输出有关信息，而clog中的信息存放在缓冲区中，缓冲区满后或遇endl时向显示器输出。</p>
+</li>
+</ul>
+<h3 id="2-1、标准输入流"><a href="#2-1、标准输入流" class="headerlink" title="2.1、标准输入流"></a>2.1、标准输入流</h3><p>标准输入流对象cin，重点掌握的函数</p>
+<ul>
+<li>cin.get() &#x2F;&#x2F;一次只能读取一个字符</li>
+<li>cin.get(一个参数) &#x2F;&#x2F;读一个字符</li>
+<li>cin.get(三个参数) &#x2F;&#x2F;可以读字符串</li>
+<li>cin.getline()</li>
+<li>cin.ignore()</li>
+<li>cin.peek()</li>
+<li>cin.putback()</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1 cin cout能根据类型 获取数据 / 输出数据</span></span><br><span class="line"><span class="comment">//2 输入字符串 你 好  遇见空格,停止接受输入</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> YourName[<span class="number">50</span>];</span><br><span class="line">	<span class="type">int</span> myInt;</span><br><span class="line">	<span class="type">long</span> myLong;</span><br><span class="line">	<span class="type">double</span> myDouble;</span><br><span class="line">	<span class="type">float</span> myFloat;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> myUnsigned;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入一个Int: &quot;</span>;</span><br><span class="line">	cin &gt;&gt; myInt;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入一个Long: &quot;</span>;</span><br><span class="line">	cin &gt;&gt; myLong;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入一个Double: &quot;</span>;</span><br><span class="line">	cin &gt;&gt; myDouble;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入你的姓名: &quot;</span>;</span><br><span class="line">	cin &gt;&gt; YourName;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;\n\n你输入的数是：&quot;</span> &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Int: \t&quot;</span> &lt;&lt; myInt &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Long: \t&quot;</span> &lt;&lt; myLong &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Double: \t&quot;</span> &lt;&lt; myDouble &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;姓名: \t&quot;</span> &lt;&lt; YourName &lt;&lt; endl;</span><br><span class="line">	cout&lt;&lt; endl &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1 输入英文 ok </span></span><br><span class="line"><span class="comment">//2 ctr+z  会产生一个 EOF(-1)</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> ch;</span><br><span class="line">	<span class="keyword">while</span>( (ch= cin.<span class="built_in">get</span>())!= EOF)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;字符: &quot;</span> &lt;&lt; ch &lt;&lt; std::endl;</span><br><span class="line">	&#125;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;\n结束.\n&quot;</span>;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//演示:读一个字符 链式编程</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> a, b, c;</span><br><span class="line">	cin.<span class="built_in">get</span>(a);</span><br><span class="line">	cin.<span class="built_in">get</span>(b);</span><br><span class="line">	cin.<span class="built_in">get</span>(c);</span><br><span class="line">	cout &lt;&lt; a &lt;&lt; b &lt;&lt; c&lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;开始链式编程&quot;</span> &lt;&lt; endl;</span><br><span class="line">	cout.<span class="built_in">flush</span>();</span><br><span class="line"></span><br><span class="line">	cin.<span class="built_in">get</span>(a).<span class="built_in">get</span>(b).<span class="built_in">get</span>(c);</span><br><span class="line">	cout &lt;&lt; a &lt;&lt; b &lt;&lt; c&lt;&lt; endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//演示cin.getline() 可以接受空格</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> buf1[<span class="number">256</span>];</span><br><span class="line">	<span class="type">char</span> buf2[<span class="number">256</span>]; </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;\n请输入你的字符串 不超过256&quot;</span> ;</span><br><span class="line">	cin.<span class="built_in">getline</span>(buf1, <span class="number">256</span>, <span class="string">&#x27;\n&#x27;</span>); </span><br><span class="line">	cout &lt;&lt; buf1 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// </span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;注意: cin.getline() 和 cin &gt;&gt; buf2 的区别, 能不能带空格 &quot;</span> &lt;&lt; endl;</span><br><span class="line">	cin &gt;&gt; buf2 ; <span class="comment">//流提取操作符 遇见空格 停止提取输入流</span></span><br><span class="line">	cout &lt;&lt; buf2 &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//缓冲区实验 </span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">1 输入 &quot;aa bb cc dd&quot; 字符串入缓冲区 </span></span><br><span class="line"><span class="comment">2 通过 cin &gt;&gt; buf1; 提走了 aa </span></span><br><span class="line"><span class="comment">3 不需要输入 可以再通过cin.getline() 把剩余的缓冲区数据提走</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> buf1[<span class="number">256</span>];</span><br><span class="line">	<span class="type">char</span> buf2[<span class="number">256</span>];</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入带有空格的字符串,测试缓冲区&quot;</span> &lt;&lt; endl; </span><br><span class="line">	cin &gt;&gt; buf1;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;buf1:&quot;</span> &lt;&lt; buf1 &lt;&lt; endl; </span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入数据...&quot;</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//缓冲区没有数据,就等待; 缓冲区如果有数据直接从缓冲区中拿走数据</span></span><br><span class="line">	cin.<span class="built_in">getline</span>(buf2, <span class="number">256</span>); </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;buf2:&quot;</span> &lt;&lt; buf2 &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ignore 和 peek</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span>  intchar;</span><br><span class="line">	<span class="type">char</span> buf1[<span class="number">256</span>];</span><br><span class="line">	<span class="type">char</span> buf2[<span class="number">256</span>];</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入带有空格的字符串,测试缓冲区 aa bb cc dd ee &quot;</span> &lt;&lt; endl; </span><br><span class="line">	cin &gt;&gt; buf1;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;buf1:&quot;</span> &lt;&lt; buf1 &lt;&lt; endl; </span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入数据...&quot;</span> &lt;&lt; endl;</span><br><span class="line">	cin.<span class="built_in">ignore</span>(<span class="number">2</span>);</span><br><span class="line">	<span class="comment">//intchar = cin.peek();</span></span><br><span class="line">	<span class="comment">//cout &lt;&lt; &quot;缓冲区若有数据,返回第一个数据的asc码:&quot; &lt;&lt; intchar &lt;&lt; endl;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//缓冲区没有数据,就等待; 缓冲区如果有数据直接从缓冲区中拿走数据</span></span><br><span class="line">	cin.<span class="built_in">getline</span>(buf2, <span class="number">256</span>); </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;buf2:&quot;</span> &lt;&lt; buf2 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	intchar = cin.<span class="built_in">peek</span>(); <span class="comment">//没有缓冲区 默认是阻塞模式 </span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;缓冲区若有数据,返回第一个数据的asc码:&quot;</span> &lt;&lt; intchar &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//案例:输入的整数和字符串分开处理</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Please, enter a number or a word: &quot;</span>;</span><br><span class="line">	<span class="type">char</span> c = std::cin.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ( (c &gt;= <span class="string">&#x27;0&#x27;</span>) &amp;&amp; (c &lt;= <span class="string">&#x27;9&#x27;</span>) ) <span class="comment">//输入的整数和字符串 分开处理</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> n; <span class="comment">//整数不可能 中间有空格 使用cin &gt;&gt;n</span></span><br><span class="line">		cin.<span class="built_in">putback</span> (c);</span><br><span class="line">		cin &gt;&gt; n;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;You entered a number: &quot;</span> &lt;&lt; n &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		string str;</span><br><span class="line">		cin.<span class="built_in">putback</span> (c);</span><br><span class="line">		<span class="built_in">getline</span> (cin,str); <span class="comment">// //字符串 中间可能有空格 使用 cin.getline();</span></span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;You entered a word: &quot;</span> &lt;&lt; str &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">	&#125;	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、标准输出流"><a href="#2-2、标准输出流" class="headerlink" title="2.2、标准输出流"></a>2.2、标准输出流</h3><p>标准输出流对象cout</p>
+<ul>
+<li>cout.flush()</li>
+<li>cout.put()</li>
+<li>cout.write()</li>
+<li>cout.width()</li>
+<li>cout.fill()</li>
+<li>cout.setf(标记)</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;iostream&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iomanip&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;hello world&quot;</span> &lt;&lt; endl;</span><br><span class="line">	cout.<span class="built_in">put</span>(<span class="string">&#x27;h&#x27;</span>).<span class="built_in">put</span>(<span class="string">&#x27;e&#x27;</span>).<span class="built_in">put</span>(<span class="string">&#x27;l&#x27;</span>).<span class="built_in">put</span>(<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">	cout.<span class="built_in">write</span>(<span class="string">&quot;hello world&quot;</span>, <span class="number">4</span>); <span class="comment">//输出的长度</span></span><br><span class="line"></span><br><span class="line">	<span class="type">char</span> buf[] = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	cout.<span class="built_in">write</span>(buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	cout.<span class="built_in">write</span>(buf, <span class="built_in">strlen</span>(buf) - <span class="number">6</span>);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	cout.<span class="built_in">write</span>(buf, <span class="built_in">strlen</span>(buf) + <span class="number">6</span>); <span class="comment">//给的大于buf长度 不会帮我们检查 提高速度</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cout.setf()控制符</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//使用类成员函数</span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;&lt;start&gt;&quot;</span>;</span><br><span class="line">	cout.<span class="built_in">width</span>(<span class="number">30</span>);</span><br><span class="line">	cout.<span class="built_in">fill</span>(<span class="string">&#x27;*&#x27;</span>);</span><br><span class="line">	cout.<span class="built_in">setf</span>(ios::showbase); <span class="comment">//#include &lt;iomanip&gt;</span></span><br><span class="line">	cout.<span class="built_in">setf</span>(ios::internal); <span class="comment">//设置</span></span><br><span class="line">	cout &lt;&lt; hex &lt;&lt; <span class="number">123</span> &lt;&lt; <span class="string">&quot;&lt;End&gt;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	<span class="comment">//manipulator(操作符、控制符)</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//使用控制阀</span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;&lt;Start&gt;&quot;</span> </span><br><span class="line">		&lt;&lt; <span class="built_in">setw</span>(<span class="number">30</span>) </span><br><span class="line">		&lt;&lt; <span class="built_in">setfill</span>(<span class="string">&#x27;*&#x27;</span>) </span><br><span class="line">		&lt;&lt; <span class="built_in">setiosflags</span>(ios::showbase) <span class="comment">//基数</span></span><br><span class="line">		&lt;&lt; <span class="built_in">setiosflags</span>(ios::internal)</span><br><span class="line">		&lt;&lt; hex</span><br><span class="line">		&lt;&lt; <span class="number">123</span></span><br><span class="line">		&lt;&lt; <span class="string">&quot;&lt;End&gt;\n&quot;</span></span><br><span class="line">		&lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3、C-格式化输出控制"><a href="#2-3、C-格式化输出控制" class="headerlink" title="2.3、C++格式化输出控制"></a>2.3、C++格式化输出控制</h3><p>在输出数据时，为简便起见，往往不指定输出的格式，由系统根据数据的类型采取默认的格式，但有时希望数据按指定的格式输出，如要求以十六进制或八进制形式 输出一个 整数，对输出的小数只保留两位小数等。有两种方法可以达到此目的。</p>
+<p>1）使用控制符的方法；</p>
+<p>2）使用流对象的有关成员函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> a;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;input a:&quot;</span>;</span><br><span class="line">	cin&gt;&gt;a;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;dec:&quot;</span>&lt;&lt;dec&lt;&lt;a&lt;&lt;endl; <span class="comment">//以十进制形式输出整数</span></span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;hex:&quot;</span>&lt;&lt;hex&lt;&lt;a&lt;&lt;endl; <span class="comment">//以十六进制形式输出整数a</span></span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;oct:&quot;</span>&lt;&lt;<span class="built_in">setbase</span>(<span class="number">8</span>)&lt;&lt;a&lt;&lt;endl; <span class="comment">//以八进制形式输出整数a</span></span><br><span class="line">	<span class="type">char</span> *pt=<span class="string">&quot;China&quot;</span>; <span class="comment">//pt指向字符串&quot;China&quot;</span></span><br><span class="line">	cout&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;pt&lt;&lt;endl; <span class="comment">//指定域宽为,输出字符串</span></span><br><span class="line">	cout&lt;&lt;<span class="built_in">setfill</span>(<span class="string">&#x27;*&#x27;</span>)&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;pt&lt;&lt;endl; <span class="comment">//指定域宽,输出字符串,空白处以&#x27;*&#x27;填充</span></span><br><span class="line">	<span class="type">double</span> pi=<span class="number">22.0</span>/<span class="number">7.0</span>; <span class="comment">//计算pi值</span></span><br><span class="line">	<span class="comment">//按指数形式输出,8位小数</span></span><br><span class="line">	cout&lt;&lt;<span class="built_in">setiosflags</span>(ios::scientific)&lt;&lt;<span class="built_in">setprecision</span>(<span class="number">8</span>);</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;pi=&quot;</span>&lt;&lt;pi&lt;&lt;endl; <span class="comment">//输出pi值</span></span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;pi=&quot;</span>&lt;&lt;<span class="built_in">setprecision</span>(<span class="number">4</span>)&lt;&lt;pi&lt;&lt;endl; <span class="comment">//改为位小数</span></span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;pi=&quot;</span>&lt;&lt;<span class="built_in">setiosflags</span>(ios::fixed)&lt;&lt;pi&lt;&lt;endl; <span class="comment">//改为小数形式输出</span></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">运行结果如下：</span><br><span class="line">input a:34↙(输入a的值)</span><br><span class="line">dec:34                   (十进制形式)</span><br><span class="line">hex:22                   (十六进制形式)</span><br><span class="line">oct:42                   (八进制形式)</span><br><span class="line">         China               (域宽为)</span><br><span class="line">*****China               (域宽为,空白处以&#x27;*&#x27;填充)</span><br><span class="line">pi=3.14285714e+00        (指数形式输出,8位小数)</span><br><span class="line">pi=3.1429e+00            (指数形式输出,4位小数)</span><br><span class="line">pi=3.143                 (小数形式输出,精度仍为)</span><br></pre></td></tr></table></figure>
+
+<p>在输入输出时有一些特殊的要求，如在输出实数时规定字段宽度，只保留两位小数，数据向左或向右对齐等。C++提供了在输入输出流中使用的控制符(有的书中称为操纵符)</p>
+<p>1）标准输入输出控制符</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dec  设置整数的基数为10 </span><br><span class="line">hex  设置整数的基数为16 </span><br><span class="line">oct  设置整数的基数为8 </span><br><span class="line">setbase(n)  设置整数的基数为n(n只能是16，10，8之一) </span><br><span class="line">setfill(c)  设置填充字符c，c可以是字符常量或字符变量 </span><br><span class="line">setprecision(n)  设置实数的精度为n位。在以一般十进制小数形式输出时，n代表有效数字。在以fixed(固定小数位数)形式和scientific(指数)形式输出时，n为小数位数。 </span><br><span class="line">setw(n)  设置字段宽度为n位。 </span><br><span class="line">setiosflags(ios::fixed)  设置浮点数以固定的小数位数显示。 </span><br><span class="line">setiosflags(ios::scientific)  设置浮点数以科学计数法(即指数形式)显示。 </span><br><span class="line">setiosflags(ios::left)  输出数据左对齐。 </span><br><span class="line">setiosflags(ios::right)  输出数据右对齐。 </span><br><span class="line">setiosflags(ios::shipws)  忽略前导的空格。 </span><br><span class="line">setiosflags(ios::uppercase)  在以科学计数法输出E和十六进制输出字母X时，以大写表示。 </span><br><span class="line">setiosflags(ios::showpos)  输出正数时，给出“+”号。 </span><br><span class="line">resetiosflags  终止已设置的输出格式状态，在括号中应指定内容。 </span><br></pre></td></tr></table></figure>
+
+<p>2）用流对象的成员控制输出格式 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">流成员函数      与之作用相同的控制符    作用 </span><br><span class="line">precision(n)  setprecision(n)     设置实数的精度为n位。 </span><br><span class="line">width(n)      setw(n)             设置字段宽度为n位。 </span><br><span class="line">fill(c)       setfill(c)          设置填充字符c。 </span><br><span class="line">setf( )       setiosflags( )      设置输出格式状态，括号中应给出格式状态，内容与控制符setiosflags括                                   号中内容相同。 </span><br><span class="line">ubsetf( )     resetiosflags( )    终止已设置的输出格式状态。 </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>3）设置格式状态的格式标志 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">格式标志         作用 </span><br><span class="line">ios::left       输出数据在本域宽范围内左对齐 </span><br><span class="line">ios::right      输出数据在本域宽范围内右对齐 </span><br><span class="line">ios::internal   数值的符号位在域宽内左对齐，数值右对齐，中间由填充字符填充 </span><br><span class="line">ios::dec        设置整数的基数为10 </span><br><span class="line">ios::oct        设置整数的基数为8 </span><br><span class="line">ios::hex        设置整数的基数为16 </span><br><span class="line">ios::showbase   强制输出整数的基数(八进制以0打头，十六进制以0x打头) </span><br><span class="line">ios::showpoint  强制输出浮点数的小点和尾数0 </span><br><span class="line">ios::uppercase  在以科学计数法输出E和十六进制输出字母X时，以大写表示 </span><br><span class="line">ios::showpos    输出正数时，给出“+”号。 </span><br><span class="line">ios::scientific  设置浮点数以科学计数法(即指数形式)显示 </span><br><span class="line">ios::fixed      设置浮点数以固定的小数位数显示 </span><br><span class="line">ios::unitbuf    每次输出后刷新所有流 </span><br><span class="line">ios::stdio      每次输出后清除 stdout，stderr </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"> </span>&#123; <span class="type">int</span> a=<span class="number">21</span>;</span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::showbase); <span class="comment">//设置输出时的基数符号</span></span><br><span class="line">   cout&lt;&lt;<span class="string">&quot;dec:&quot;</span>&lt;&lt;a&lt;&lt;endl; <span class="comment">//默认以十进制形式输出a</span></span><br><span class="line">   cout.<span class="built_in">unsetf</span>(ios::dec); <span class="comment">//终止十进制的格式设置</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::hex); <span class="comment">//设置以十六进制输出的状态</span></span><br><span class="line">   cout&lt;&lt;<span class="string">&quot;hex:&quot;</span>&lt;&lt;a&lt;&lt;endl; <span class="comment">//以十六进制形式输出a</span></span><br><span class="line">   cout.<span class="built_in">unsetf</span>(ios::hex); <span class="comment">//终止十六进制的格式设置</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::oct); <span class="comment">//设置以八进制输出的状态</span></span><br><span class="line">   cout&lt;&lt;<span class="string">&quot;oct:&quot;</span>&lt;&lt;a&lt;&lt;endl; <span class="comment">//以八进制形式输出a</span></span><br><span class="line">   cout.<span class="built_in">unsetf</span>(ios::oct); <span class="comment">//终止以八进制的输出格式设置</span></span><br><span class="line">   <span class="type">char</span> *pt=<span class="string">&quot;China&quot;</span>; <span class="comment">//pt指向字符串”china”</span></span><br><span class="line">   cout.<span class="built_in">width</span>(<span class="number">10</span>); <span class="comment">//指定域宽为10</span></span><br><span class="line">   cout&lt;&lt;pt&lt;&lt;endl; <span class="comment">//输出字符串</span></span><br><span class="line">   cout.<span class="built_in">width</span>(<span class="number">10</span>); <span class="comment">//指定域宽为10</span></span><br><span class="line">   cout.<span class="built_in">fill</span>(<span class="string">&#x27;*&#x27;</span>); <span class="comment">//指定空白处以&#x27;*&#x27;填充</span></span><br><span class="line">   cout&lt;&lt;pt&lt;&lt;endl; <span class="comment">//输出字符串</span></span><br><span class="line">   <span class="type">double</span> pi=<span class="number">22.0</span>/<span class="number">7.0</span>; <span class="comment">//计算pi值</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::scientific);<span class="comment">//指定用科学记数法输出</span></span><br><span class="line">   cout&lt;&lt;<span class="string">&quot;pi=&quot;</span>; <span class="comment">//输出&quot;pi=&quot;</span></span><br><span class="line">   cout.<span class="built_in">width</span>(<span class="number">14</span>); <span class="comment">//指定域宽为14</span></span><br><span class="line">   cout&lt;&lt;pi&lt;&lt;endl; <span class="comment">//输出&quot;pi值</span></span><br><span class="line">   cout.<span class="built_in">unsetf</span>(ios::scientific); <span class="comment">//终止科学记数法状态</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::fixed); <span class="comment">//指定用定点形式输出</span></span><br><span class="line">   cout.<span class="built_in">width</span>(<span class="number">12</span>); <span class="comment">//指定域宽为12</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::showpos); <span class="comment">//在输出正数时显示“+”号</span></span><br><span class="line">   cout.<span class="built_in">setf</span>(ios::internal); <span class="comment">//数符出现在左侧</span></span><br><span class="line">   cout.<span class="built_in">precision</span>(<span class="number">6</span>); <span class="comment">//保留6位小数</span></span><br><span class="line">   cout&lt;&lt;pi&lt;&lt;endl; <span class="comment">//输出pi，注意数符“+”的位置</span></span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">运行结果：</span><br><span class="line">dec：<span class="number">21</span> (十进制形式)</span><br><span class="line">    hex：<span class="built_in">Oxl5</span> (十六进制形式，以<span class="number">0</span>x开头)</span><br><span class="line">    oct：<span class="number">025</span> (八进制形式，以O开头)</span><br><span class="line">    <span class="built_in">China</span> (域宽为<span class="number">10</span>)</span><br><span class="line">    *****<span class="built_in">china</span> (域宽为<span class="number">10</span>，空白处以<span class="string">&#x27;*&#x27;</span>填充)</span><br><span class="line">    pi=**<span class="number">3.142857e+00</span> (指数形式输出，域宽<span class="number">14</span>，默认<span class="number">6</span>位小数)</span><br><span class="line">    ****<span class="number">3.142857</span> (小数形式输㈩，精度为<span class="number">6</span>，最左侧输出数符“+”)</span><br></pre></td></tr></table></figure>
+
+<p>对程序的几点说明：</p>
+<ol>
+<li>成员函数width(n)和控制符setw(n)只对其后的第一个输出项有效。如：</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cout.<span class="built_in">width</span>(<span class="number">6</span>);</span><br><span class="line">cout &lt;&lt;<span class="number">20</span> &lt;&lt;<span class="number">3.14</span>&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">输出结果为 <span class="number">203.14</span></span><br></pre></td></tr></table></figure>
+
+<p>在输出第一个输出项20时，域宽为6，因此在20前面有4个空格，在输出3.14时，width (6)已不起作用，此时按系统默认的域宽输出（按数据实际长度输出）。如果要求在输出数据时都按指定的同一域宽n输出，不能只调用一次width(n)， 而必须在输出每一项前都调用一次width(n&gt;），上面的程序中就是这样做的。</p>
+<ol start="2">
+<li><p>在输出格式状态分为5组，每一组中同时只能选用一种（例如dec、hex和oct中只能选一，它们是互相排斥的）。在用成员函数setf和 控制符setiosflags设置输出格式状态后，如果想改设置为同组的另一状态，应当调用成员函数unsetf（对应于成员函数self）或 resetiosflags（对应于控制符setiosflags），先终止原来设置的状态。然后再设置其他状态，可以从本程序中看到这点。程序在开始虽然没有用成员函数self和控制符setiosflags设置用dec输出格式状态，但系统默认指定为dec，因此要改变为hex或oct，也应当先 用unsetf 函数终止原来设置。如果删去程序中的第7行和第10行，虽然在第8行和第11行中用成员函数setf设置了hex和oct格式，由于未终止dec格式，因 此hex和oct的设置均不起作用，系统依然以十进制形式输出。同理，程序倒数第8行的unsetf 函数的调用也是不可缺少的。</p>
+</li>
+<li><p>用setf 函数设置格式状态时，可以包含两个或多个格式标志，由于这些格式标志在ios类中被定义为枚举值，每一个格式标志以一个二进位代表，因此可以用位或运算符“|”组合多个格式标志。如倒数第5、第6行可以用下面一行代替：</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cout.<span class="built_in">setf</span>(ios::internal I ios::showpos);  <span class="comment">//包含两个状态标志，用&quot;|&quot;组合</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到：对输出格式的控制，既可以用控制符，也可以用cout流的有关成员函数，二者的作用是相同的。控制符是在头文件iomanip中定义的，因此用控制符时，必须包含iomanip头文件。cout流的成员函数是在头文件iostream 中定义的，因此只需包含头文件iostream，不必包含iomanip。许多程序人员感到使用控制符方便简单，可以在一个cout输出语句中连续使用多种控制符。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%A0%87%E5%87%86IO%E6%B5%81/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%96%87%E4%BB%B6IO/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            C++输入输出-文件IO
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/31/C-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++异常处理</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

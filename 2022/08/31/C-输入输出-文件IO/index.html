@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>C++输入输出-文件IO |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C-输入输出-文件IO"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C++输入输出-文件IO
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%96%87%E4%BB%B6IO/" class="article-date">
+  <time datetime="2022-08-31T08:04:59.000Z" itemprop="datePublished">2022-08-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/C/">C++</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C-输入输出–文件IO"><a href="#C-输入输出–文件IO" class="headerlink" title="C++输入输出–文件IO"></a>C++输入输出–文件IO</h1><h2 id="1、文件流类和文件流对象"><a href="#1、文件流类和文件流对象" class="headerlink" title="1、文件流类和文件流对象"></a>1、文件流类和文件流对象</h2><p>输入输出是以系统指定的标准设备（输入设备为键盘，输出设备为显示器）为对象的。在实际应用中，常以磁盘文件作为对象。即从磁盘文件读取数据，将数据输出到磁盘文件。<span id="more"></span></p>
+<p>和文件有关系的输入输出类主要在fstream.h这个头文件中被定义，在这个头文件中主要被定义了三个类，由这三个类控制对文件的各种输入输出操 作，他们分别是ifstream、ofstream、fstream，其中fstream类是由iostream类派生而来，他们之间的继承关系见下图所示：</p>
+<p><img src="https://pic.imgdb.cn/item/630f16a616f2c2beb1a3d351.jpg"></p>
+<p>由于文件设备并不像显示器屏幕与键盘那样是标准默认设备，所以它在fstream.h头文件中是没有像cout那样预先定义的全局对象，所以我们必须自己定义一个该类的对象。</p>
+<ul>
+<li><p>ifstream类，它是从istream类派生的，用来支持从磁盘文件的输入。</p>
+</li>
+<li><p>ofstream类，它是从ostream类派生的，用来支持向磁盘文件的输出。</p>
+</li>
+<li><p>fstream类，它是从iostream类派生的，用来支持对磁盘文件的输入输出。</p>
+</li>
+</ul>
+<h2 id="2、文件打开和关闭"><a href="#2、文件打开和关闭" class="headerlink" title="2、文件打开和关闭"></a>2、文件打开和关闭</h2><p>C++根据文件（file）内容的数据格式，可分为两类：</p>
+<ul>
+<li><p>文本文件：由字符序列组成，在文本文件中存取的最小信息单位为字符（character），也称ASCII码文件。</p>
+</li>
+<li><p>二进制文件：存取的最小信息单位为字节（Byte）。</p>
+</li>
+</ul>
+<p>C++把每个文件都看成一个有序的字节流，每一个文件或者以文件结束符（end of file marker）结束，或者在特定的字节号处结束，如下图所示。</p>
+<p><img src="https://pic.imgdb.cn/item/630f16c216f2c2beb1a3e3ba.jpg"></p>
+<p>当打开一个文件时，该文件就和某个流关联起来了。对文件进行读写实际上受到一个文件定位指针（file position pointer）的控制。输入流的指针也称为读指针，每一次提取操作将从读指针当前所指位置开始，每次提取操作自动将读指针向文件尾移动。输出流指针也称写指针，每一次插入操作将从写指针当前位置开始，每次插入操作自动将写指针向文件尾移动。 </p>
+<h3 id="2-1、文件打开"><a href="#2-1、文件打开" class="headerlink" title="2.1、文件打开"></a>2.1、文件打开</h3><p>打开文件是指在文件读写之前做必要的准备工作，包括：</p>
+<ul>
+<li><p>为文件流对象和指定的磁盘文件建立关联，以便使文件流流向指定的磁盘文件。</p>
+</li>
+<li><p>指定文件的工作方式，如，该文件是作为输入文件还是输出文件，是ASCII文件还是二进制文件等。</p>
+</li>
+</ul>
+<p>以上工作可以通过两种不同的方法实现。</p>
+<ol>
+<li>调用文件流的成员函数open。如</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ofstream outfile;  <span class="comment">//定义ofstream类(输出文件流类)对象outfile</span></span><br><span class="line"></span><br><span class="line">outfile.<span class="built_in">open</span>(<span class="string">&quot;f1.dat&quot;</span>,ios::out);  <span class="comment">//使文件流与f1.dat文件建立关联</span></span><br></pre></td></tr></table></figure>
+
+<p>第2行是调用输出文件流的成员函数open打开磁盘文件f1.dat，并指定它为输出文件， 文件流对象outfile将向磁盘文件f1.dat输出数据。ios::out是I&#x2F;O模式的一种，表示以输出方式打开一个文件。或者简单地说，此时f1.dat是一个输出文件，接收从内存输出的数据。</p>
+<p>调用成员函数open的一般形式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文件流对象.<span class="built_in">open</span>(磁盘文件名, 输入输出方式);</span><br></pre></td></tr></table></figure>
+
+<p>磁盘文件名可以包括路径，如”c:\new\f1.dat”，如缺省路径，则默认为当前目录下的文件。</p>
+<ol start="2">
+<li>在定义文件流对象时指定参数</li>
+</ol>
+<p>在声明文件流类时定义了带参数的构造函数，其中包含了打开磁盘文件的功能。因此，可以在定义文件流对象时指定参数，调用文件流类的构造函数来实现打开文件的功能。如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ostream <span class="title">outfile</span><span class="params">(<span class="string">&quot;f1.dat&quot;</span>,ios::out)</span></span>; 一般多用此形式，比较方便。作用与open函数相同。</span><br></pre></td></tr></table></figure>
+
+<p>输入输出方式是在ios类中定义的，它们是枚举常量，有多种选择。</p>
+<p>需要注意的是：</p>
+<ol>
+<li><p>每一个打开的文件都有一个文件指针，该指针的初始位置由I&#x2F;O方式指定，每次读写都从文件指针的当前位置开始。每读入一个字节，指针就后移一个字节。当文 件指针移到最后，就会遇到文件结束EOF（文件结束符也占一个字节，其值为-1)，此时流对象的成员函数eof的值为非0值(一般设为1)，表示文件结束 了。</p>
+</li>
+<li><p>可以用“位或”运算符“|”对输入输出方式进行组合，如表13.6中最后3行所示那样。还可以举出下面一些例子：</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ios::in | ios:: noreplace  <span class="comment">//打开一个输入文件，若文件不存在则返回打开失败的信息</span></span><br><span class="line">ios::app | ios::nocreate  <span class="comment">//打开一个输出文件，在文件尾接着写数据，若文件不存在，则返回打开失败的信息</span></span><br><span class="line">ios::out l ios::noreplace  <span class="comment">//打开一个新文件作为输出文件，如果文件已存在则返回打开失败的信息</span></span><br><span class="line">ios::in l ios::out I ios::binary  <span class="comment">//打开一个二进制文件，可读可写</span></span><br></pre></td></tr></table></figure>
+
+<p>但不能组合互相排斥的方式，如 ios::nocreate l ios::noreplace。</p>
+<ol start="3">
+<li>如果打开操作失败，open函数的返回值为0(假)，如果是用调用构造函数的方式打开文件的，则流对象的值为0。可以据此测试打开是否成功。如</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span>(outfile.<span class="built_in">open</span>(<span class="string">&quot;f1.bat&quot;</span>, ios::app) ==<span class="number">0</span>)</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;open error&quot;</span>;</span><br><span class="line"><span class="comment">//或</span></span><br><span class="line">  <span class="keyword">if</span>( !outfile.<span class="built_in">open</span>(<span class="string">&quot;f1.bat&quot;</span>, ios::app) )</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;open error&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、文件关闭"><a href="#2-2、文件关闭" class="headerlink" title="2.2、文件关闭"></a>2.2、文件关闭</h3><p>在对已打开的磁盘文件的读写操作完成后，应关闭该文件。关闭文件用成员函数close。如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outfile.<span class="built_in">close</span>( );  <span class="comment">//将输出文件流所关联的磁盘文件关闭</span></span><br></pre></td></tr></table></figure>
+
+<p>关闭文件，实际上是解除该磁盘文件与文件流的关联，原来设置的工作方式也失效，这样，就不能再通过文件流对该文件进行输入或输出。此时可以将文件流与其他磁盘文件建立关联，通过文件流对新的文件进行输入或输出。如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outfile.<span class="built_in">open</span>(<span class="string">&quot;f2.dat&quot;</span>,ios::app|ios::nocreate);</span><br></pre></td></tr></table></figure>
+
+<p>此时文件流outfile与f2.dat建立关联，并指定了f2.dat的工作方式。</p>
+<p>关闭文件并没有取消文件流对象，该文件流对象又可与其他磁盘文件建立联系。文件流对象在程序结束时，或它的生命期结束时，由析构函数撤消。它同时释放内部分配的预留缓冲区。 </p>
+<h3 id="2-3、文件操作的5个步骤"><a href="#2-3、文件操作的5个步骤" class="headerlink" title="2.3、文件操作的5个步骤"></a>2.3、文件操作的5个步骤</h3><p>可以总结出文件使用的5步骤：</p>
+<p>①说明一个文件流对象，这又被称为内部文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifstream ifile；<span class="comment">//只输入用</span></span><br><span class="line">ofstream ofile；<span class="comment">//只输出用</span></span><br><span class="line">fstream iofile；<span class="comment">//既输入又输出用</span></span><br></pre></td></tr></table></figure>
+
+<p>②使用文件流对象的成员函数打开一个磁盘文件。这样在文件流对象和磁盘文件名之间建立联系。文件流中说明了三个打开文件的成员函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ifstream::open</span><span class="params">(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>=ios::in,<span class="type">int</span>=filebuf::openprot)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ofstream::open</span><span class="params">(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>=ios::out,<span class="type">int</span>=filebuf::openprot)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fstream::open</span><span class="params">(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>,<span class="type">int</span>=filebuf::openprot)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数为要打开的磁盘文件名。第二个参数为打开方式，有输入（in），输出（out）等，打开方式在ios基类中定义为枚举类型。第三个参数为指定打开文件的保护方式，一般取默认。所以第二步可如下进行：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iofile.<span class="built_in">open</span>(“myfile.txt”,ios::in|ios::out);</span><br></pre></td></tr></table></figure>
+
+<p>上面三个文件流类都重载了一个带默认参数的构造函数，功能与open函数一样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifstream::ifstream(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>=ios::in,<span class="type">int</span>=filebuf::openprot);</span><br><span class="line">ofstream::<span class="built_in">ofstream</span>(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>=ios::out,<span class="type">int</span>=filebuf::openprot);</span><br><span class="line">fstream::<span class="built_in">fstream</span>(<span class="type">const</span> <span class="type">char</span>*,<span class="type">int</span>,<span class="type">int</span>=filebuf::operprot);</span><br></pre></td></tr></table></figure>
+
+<p>所以①和②两步可合成： </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fstream <span class="title">iofile</span><span class="params">(”myfile.txt”,ios::in|ios::out)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>③打开文件也应该判断是否成功，若成功，文件流对象值为非零值，不成功为0（NULL），文件流对象值物理上就是指它的地址。因此打开一个文件完整的程序为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fstream iofile（”myfile.txt”,ios::in|ios::out）;</span><br><span class="line"><span class="keyword">if</span>(!iofile)</span><br><span class="line">&#123; <span class="comment">//“！”为重载的运算符</span></span><br><span class="line">    cout&lt;&lt;”不能打开文件:”&lt;&lt;”myfile,txt”&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125; <span class="comment">//失败退回操作系统</span></span><br></pre></td></tr></table></figure>
+
+<p>④使用提取和插入运算符对文件进行读写操作，或使用成员函数进行读写</p>
+<p>⑤关闭文件。三个文件流类各有一个关闭文件的成员函数 :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ifstream::close</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ofstream::close</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fstream::close</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用很方便，如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iofile.<span class="built_in">close</span>(); </span><br></pre></td></tr></table></figure>
+
+<h2 id="3、C-对ASCII文件的读写操作"><a href="#3、C-对ASCII文件的读写操作" class="headerlink" title="3、C++对ASCII文件的读写操作"></a>3、C++对ASCII文件的读写操作</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;fstream&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> fileName[<span class="number">80</span>];</span><br><span class="line">	<span class="type">char</span> buffer[<span class="number">255</span>];</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;请输入一个文件名: &quot;</span>;</span><br><span class="line">	cin &gt;&gt; fileName;</span><br><span class="line"></span><br><span class="line">	<span class="function">ofstream <span class="title">fout</span><span class="params">(fileName, ios::app)</span></span>;</span><br><span class="line">	fout &lt;&lt; <span class="string">&quot;1111111111111111111\n&quot;</span>;</span><br><span class="line">	fout &lt;&lt; <span class="string">&quot;22222222222222222\n&quot;</span>;</span><br><span class="line">	<span class="comment">//cin.ignore(1,&#x27;\n&#x27;);</span></span><br><span class="line">	cin.<span class="built_in">getline</span>(buffer,<span class="number">255</span>); <span class="comment">//从键盘输入</span></span><br><span class="line">	fout &lt;&lt; buffer &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">	fout.<span class="built_in">close</span>();</span><br><span class="line"></span><br><span class="line">	<span class="function">ifstream <span class="title">fin</span><span class="params">(fileName)</span></span>;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Here&#x27;s the the content of the file: \n&quot;</span>;</span><br><span class="line">	<span class="type">char</span> ch;</span><br><span class="line">	<span class="keyword">while</span>(fin.<span class="built_in">get</span>(ch))</span><br><span class="line">		cout &lt;&lt; ch;</span><br><span class="line"></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;\n***End of file contents.***\n&quot;</span>;</span><br><span class="line">	fin.<span class="built_in">close</span>();</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span> </span></span><br><span class="line">usingnamespace std; </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">        ifstream myfile; </span><br><span class="line">        myfile.<span class="built_in">open</span>(<span class="string">&quot;c:\\test.txt&quot;</span>,ios::in,<span class="number">0</span>); </span><br><span class="line">        <span class="keyword">if</span>(!myfile) </span><br><span class="line">        &#123; </span><br><span class="line">                cout&lt;&lt;<span class="string">&quot;文件读错误&quot;</span>; </span><br><span class="line">                <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>); </span><br><span class="line">                <span class="built_in">exit</span>(<span class="number">1</span>); </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="type">char</span> ch; </span><br><span class="line">        string content; </span><br><span class="line">        <span class="keyword">while</span>(myfile.<span class="built_in">get</span>(ch)) </span><br><span class="line">        &#123; </span><br><span class="line">                content+=ch; </span><br><span class="line">                cout.<span class="built_in">put</span>(ch);<span class="comment">//cout&lt;&lt;ch;这么写也是可以的 </span></span><br><span class="line">        &#125; </span><br><span class="line">        myfile.<span class="built_in">close</span>(); </span><br><span class="line">        cout&lt;&lt;content; </span><br><span class="line">        <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、C-对二进制文件的读写操作"><a href="#4、C-对二进制文件的读写操作" class="headerlink" title="4、C++对二进制文件的读写操作"></a>4、C++对二进制文件的读写操作</h2><p>用成员函数read和write读写二进制文件，对二进制文件的读写主要用istream类的成员函数read和write来实现。这两个成员函数的原型为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream&amp; <span class="title">read</span><span class="params">(<span class="type">char</span> *buffer,<span class="type">int</span> len)</span></span>;</span><br><span class="line"><span class="function">ostream&amp; <span class="title">write</span><span class="params">(<span class="type">const</span> <span class="type">char</span> * buffer,<span class="type">int</span> len)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>字符指针buffer指向内存中一段存储空间。len是读写的字节数。调用的方式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a. <span class="built_in">write</span>(p1,<span class="number">50</span>);</span><br><span class="line">b. <span class="built_in">read</span>(p2,<span class="number">30</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面第一行中的a是输出文件流对象，write函数将字符指针p1所给出的地址开始的50个字节的内容不加转换地写到磁盘文件中。在第二行中，b是输入文 件流对象，read 函数从b所关联的磁盘文件中，读入30个字节(或遇EOF结束），存放在字符指针p2所指的一段空间内。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建二进制数据文件，以及数据文件的读取。这两项操作设计为成员函数</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iomanip&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">inventory</span>&#123;</span><br><span class="line">	string Description;</span><br><span class="line">	string No;</span><br><span class="line">	<span class="type">int</span> Quantity;</span><br><span class="line">	<span class="type">double</span> Cost;</span><br><span class="line">	<span class="type">double</span> Retail;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">inventory</span>(string=<span class="string">&quot;#&quot;</span>,string=<span class="string">&quot;0&quot;</span>,<span class="type">int</span> =<span class="number">0</span>,<span class="type">double</span> =<span class="number">0</span>,<span class="type">double</span> =<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream&amp;,inventory&amp;);</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">Bdatatofile</span><span class="params">(ofstream&amp;dist)</span></span>;     <span class="comment">//文件流类作为形式参数必须是引用</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">Bdatafromfile</span><span class="params">(ifstream&amp;sour)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">inventory::<span class="built_in">inventory</span>(string des,string no,<span class="type">int</span> quan,<span class="type">double</span> cost,<span class="type">double</span> ret)&#123;</span><br><span class="line">	Description=des;</span><br><span class="line">	No=no;</span><br><span class="line">	Quantity=quan;</span><br><span class="line">	Cost=cost;</span><br><span class="line">	Retail=ret;</span><br><span class="line">&#125;</span><br><span class="line">ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream&amp;dist,inventory&amp;iv)&#123;</span><br><span class="line">	dist&lt;&lt;left&lt;&lt;<span class="built_in">setw</span>(<span class="number">20</span>)&lt;&lt;iv.Description&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;iv.No;</span><br><span class="line">	dist&lt;&lt;right&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;iv.Quantity&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;iv.Cost&lt;&lt;<span class="built_in">setw</span>(<span class="number">10</span>)&lt;&lt;iv.Retail&lt;&lt;endl;</span><br><span class="line">	<span class="keyword">return</span> dist;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">inventory::Bdatatofile</span><span class="params">(ofstream&amp;dist)</span></span>&#123;</span><br><span class="line">	dist.<span class="built_in">write</span>(Description.<span class="built_in">c_str</span>(),<span class="number">20</span>); <span class="comment">//由string类的c_str()函数转为char*</span></span><br><span class="line">	dist.<span class="built_in">write</span>(No.<span class="built_in">c_str</span>(),<span class="number">10</span>);</span><br><span class="line">	dist.<span class="built_in">write</span>((<span class="type">char</span>*)&amp;Quantity,<span class="built_in">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">	dist.<span class="built_in">write</span>((<span class="type">char</span>*)&amp;Cost,<span class="built_in">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">	dist.<span class="built_in">write</span>((<span class="type">char</span>*)&amp;Retail,<span class="built_in">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">inventory::Bdatafromfile</span><span class="params">(ifstream&amp;sour)</span></span>&#123;</span><br><span class="line">	<span class="type">char</span> k[<span class="number">20</span>];</span><br><span class="line">	sour.<span class="built_in">read</span>(k,<span class="number">20</span>);</span><br><span class="line">	Description=k;</span><br><span class="line">	sour.<span class="built_in">read</span>(k,<span class="number">10</span>);</span><br><span class="line">	No=k;</span><br><span class="line">	sour.<span class="built_in">read</span>((<span class="type">char</span>*)&amp;Quantity,<span class="built_in">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">	sour.<span class="built_in">read</span>((<span class="type">char</span>*)&amp;Cost,<span class="built_in">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">	sour.<span class="built_in">read</span>((<span class="type">char</span>*)&amp;Retail,<span class="built_in">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">&#125;<span class="comment">//由此可见读和写是完全对称的过程,次序决不能错</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="function">inventory <span class="title">car1</span><span class="params">(<span class="string">&quot;夏利2000&quot;</span>,<span class="string">&quot;805637928&quot;</span>,<span class="number">156</span>,<span class="number">80000</span>,<span class="number">105000</span>)</span>,car2</span>;</span><br><span class="line">	<span class="function">inventory <span class="title">motor1</span><span class="params">(<span class="string">&quot;金城125&quot;</span>,<span class="string">&quot;93612575&quot;</span>,<span class="number">302</span>,<span class="number">10000</span>,<span class="number">13000</span>)</span>,motor2</span>;</span><br><span class="line">	<span class="function">ofstream <span class="title">ddatafile</span><span class="params">(<span class="string">&quot;d:\\Ex9_10.data&quot;</span>,ios::out|ios::binary)</span></span>;</span><br><span class="line">	car1.<span class="built_in">Bdatatofile</span>(ddatafile);</span><br><span class="line">	motor1.<span class="built_in">Bdatatofile</span>(ddatafile);</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象car1:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;car1;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象motor1:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;motor1;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象car2:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;car2;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象motor2:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;motor2;</span><br><span class="line">	ddatafile.<span class="built_in">close</span>();</span><br><span class="line">	<span class="function">ifstream <span class="title">sdatafile</span><span class="params">(<span class="string">&quot;d:\\Ex9_10.data&quot;</span>,ios::in|ios::binary)</span></span>;<span class="comment">//重新打开文件,从头读取数据</span></span><br><span class="line">	car2.<span class="built_in">Bdatafromfile</span>(sdatafile);                         <span class="comment">//从文件读取数据拷贝到对象car2</span></span><br><span class="line">	<span class="keyword">if</span>(sdatafile.<span class="built_in">eof</span>()==<span class="number">0</span>) cout&lt;&lt;<span class="string">&quot;读文件成功&quot;</span>&lt;&lt;endl; </span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象car2:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;car2;</span><br><span class="line">	motor2.<span class="built_in">Bdatafromfile</span>(sdatafile);                 <span class="comment">//继续从文件读取数据拷贝到对象motor2</span></span><br><span class="line">	<span class="keyword">if</span>(sdatafile.<span class="built_in">eof</span>()==<span class="number">0</span>) cout&lt;&lt;<span class="string">&quot;读文件成功&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;对象motor2:&quot;</span>&lt;&lt;endl;</span><br><span class="line">	cout&lt;&lt;motor2;</span><br><span class="line">	sdatafile.<span class="built_in">close</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 文件结束判断：读函数并不能知道文件是否结束，可用状态函数int ios::eof()来判断文件是否结束。必须指出系统是根据当前操作的实际情况设置状态位，如需根据状态位来判断下一步的操作，必须在一次操作后立即去调取状态位，以判断本次操作是否有效。 </p>
+<p> 二进制文件优点：可以控制字节长度，读写数据时不会出现二义性，可靠性高。同时不知格式是无法读取的，保密性好。文件结束后，系统不会再读，但程序不会自动停下来，所以要判断文件中是否已没有数据。如写完数据后没有关闭文件，直接开始读，则必须把文件定位指针移到文件头。如关闭文件后重新打开，文件定位指针就在文件头。 </p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%96%87%E4%BB%B6IO/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/08/31/C-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-%E6%A0%87%E5%87%86IO%E6%B5%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C++输入输出-标准IO流</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>
