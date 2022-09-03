@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>STL容器-Vector |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-STL容器-Vector"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  STL容器-Vector
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/02/STL%E5%AE%B9%E5%99%A8-Vector/" class="article-date">
+  <time datetime="2022-09-02T09:19:16.000Z" itemprop="datePublished">2022-09-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/STL/">STL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="STL容器-Vector"><a href="#STL容器-Vector" class="headerlink" title="STL容器-Vector"></a>STL容器-Vector</h1><h2 id="1、Vector容器简介"><a href="#1、Vector容器简介" class="headerlink" title="1、Vector容器简介"></a>1、Vector容器简介</h2><ul>
+<li>vector是将元素置于一个动态数组中加以管理的容器。</li>
+<li>vector可以随机存取元素（支持索引值直接存取， 用[]操作符或at()方法）。</li>
+<li>vector尾部添加或移除元素非常快速。但是在中部或头部插入元素或移除元素比较费时。</li>
+</ul>
+<h2 id="2、Vector对象的默认构造"><a href="#2、Vector对象的默认构造" class="headerlink" title="2、Vector对象的默认构造"></a>2、Vector对象的默认构造</h2><p>vector采用模板类实现，vector对象的默认构造形式<br><strong>vector<T> vecT;</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;        	<span class="comment">//一个存放int的vector容器。</span></span><br><span class="line">vector&lt;<span class="type">float</span>&gt; vecFloat;     <span class="comment">//一个存放float的vector容器。</span></span><br><span class="line">vector&lt;string&gt; vecString;   <span class="comment">//一个存放string的vector容器。</span></span><br><span class="line">...				            <span class="comment">//尖括号内还可以设置指针类型或自定义类型。</span></span><br><span class="line"></span><br><span class="line">Class CA&#123;&#125;;</span><br><span class="line">vector&lt;CA*&gt; vecpCA;	  	<span class="comment">//用于存放CA对象的指针的vector容器。</span></span><br><span class="line">vector&lt;CA&gt; vecCA;     	<span class="comment">//用于存放CA对象的vector容器。由于容器元素的存放是按值复制的方式进行的，所以此时CA必须提供CA的拷贝构造函数，以保证CA对象间拷贝正常。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、vector对象的带参数构造"><a href="#3、vector对象的带参数构造" class="headerlink" title="3、vector对象的带参数构造"></a>3、vector对象的带参数构造</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vector(beg,end);</strong>    &#x2F;&#x2F;构造函数将[beg, end)区间中的元素拷贝给本身。注意该区间是左闭右开的区间。</li>
+<li><strong>vector(n,elem);</strong>     &#x2F;&#x2F;构造函数将n个elem拷贝给本身。</li>
+<li><strong>vector(const vector &amp;vec);</strong>   &#x2F;&#x2F;拷贝构造函数</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>  iArray[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt;  <span class="title">vecIntA</span><span class="params">(iArray,  iArray+<span class="number">5</span> )</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vecIntB</span> <span class="params">(vecIntA.begin(), vecIntA.end())</span></span>;   <span class="comment">//用构造函数初始化容器vecIntB </span></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vecIntB</span> <span class="params">(vecIntA.begin(), vecIntA.begin()+<span class="number">3</span>)</span></span>;  </span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vecIntC</span><span class="params">(<span class="number">3</span>, <span class="number">9</span>)</span></span>; <span class="comment">//此代码运行后，容器vecIntB就存放3个元素，每个元素的值是9。</span></span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vecIntD</span><span class="params">(vecIntA)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、vector的赋值"><a href="#4、vector的赋值" class="headerlink" title="4、vector的赋值"></a>4、vector的赋值</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vector.assign(beg,end);</strong>    &#x2F;&#x2F;将[beg, end)区间中的数据拷贝赋值给本身。注意该区间是左闭右开的区间。</li>
+<li><strong>vector.assign(n,elem);</strong>     &#x2F;&#x2F;将n个elem拷贝赋值给本身。</li>
+<li><strong>vector&amp; operator&#x3D;(const vector  &amp;vec);</strong>	&#x2F;&#x2F;重载等号操作符</li>
+<li><strong>vector.swap(vec);</strong>  &#x2F;&#x2F; 将vec与本身的元素互换。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA, vecIntB, vecIntC, vecIntD;</span><br><span class="line"><span class="type">int</span>  iArray[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line">vecIntA.<span class="built_in">assign</span>(iArray,iArray+<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">vecIntB.<span class="built_in">assign</span>(vecIntA.<span class="built_in">begin</span>(),  vecIntA.<span class="built_in">end</span>());    <span class="comment">//用其它容器的迭代器作参数。</span></span><br><span class="line"></span><br><span class="line">vecIntC.<span class="built_in">assign</span>(<span class="number">3</span>,<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntD;</span><br><span class="line">vecIntD = vecIntA;</span><br><span class="line"></span><br><span class="line">vecIntA.<span class="built_in">swap</span>(vecIntD);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、vector的大小"><a href="#5、vector的大小" class="headerlink" title="5、vector的大小"></a>5、vector的大小</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vector.size();</strong>	   &#x2F;&#x2F;返回容器中元素的个数</li>
+<li><strong>vector.empty();</strong>	   &#x2F;&#x2F;判断容器是否为空</li>
+<li><strong>vector.resize(num);</strong>   &#x2F;&#x2F;重新指定容器的长度为num，若容器变长，则以默认值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。</li>
+<li><strong>vector.resize(num, elem);</strong>  &#x2F;&#x2F;重新指定容器的长度为num，若容器变长，则以elem值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vecInt是vector&lt;<span class="type">int</span>&gt;  声明的容器，现已包含<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>元素。</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> iSize = vecInt.<span class="built_in">size</span>();		<span class="comment">//iSize == 3;</span></span><br><span class="line"><span class="type">bool</span> bEmpty = vecInt.<span class="built_in">empty</span>();	<span class="comment">// bEmpty == false;</span></span><br><span class="line">vecInt.<span class="built_in">resize</span>(<span class="number">5</span>);   <span class="comment">//此时里面包含1,2,3,0,0元素。</span></span><br><span class="line">vecInt.<span class="built_in">resize</span>(<span class="number">8</span>,<span class="number">3</span>); <span class="comment">//此时里面包含1,2,3,0,0,3,3,3元素。</span></span><br><span class="line">vecInt.<span class="built_in">resize</span>(<span class="number">2</span>);   <span class="comment">//此时里面包含1,2元素。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6、vector末尾的添加移除操作"><a href="#6、vector末尾的添加移除操作" class="headerlink" title="6、vector末尾的添加移除操作"></a>6、vector末尾的添加移除操作</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);  <span class="comment">//在容器尾部加入一个元素</span></span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">3</span>);  <span class="comment">//移除容器中最后一个元素</span></span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);  </span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">7</span>); </span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">9</span>); </span><br><span class="line">vecInt.<span class="built_in">pop_back</span>();    </span><br><span class="line">vecInt.<span class="built_in">pop_back</span>();</span><br><span class="line"><span class="comment">//&#123;5 ,7 ,9&#125;  </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7、vector的数据存取"><a href="#7、vector的数据存取" class="headerlink" title="7、vector的数据存取"></a>7、vector的数据存取</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vec.at(idx);</strong>  &#x2F;&#x2F;返回索引idx所指的数据，如果idx越界，抛出out_of_range异常。</li>
+<li><strong>vec[idx];</strong>  	&#x2F;&#x2F;返回索引idx所指的数据，越界时，运行直接报错</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vector;    <span class="comment">//假设包含1 ,3 ,5 ,7 ,9</span></span><br><span class="line">vector.<span class="built_in">at</span>(<span class="number">2</span>) == vector[<span class="number">2</span>];	<span class="comment">//5 true</span></span><br><span class="line">vector.<span class="built_in">at</span>(<span class="number">2</span>) = <span class="number">8</span>;  <span class="comment">//或 vector[2] = 8;</span></span><br><span class="line"><span class="comment">//vector 就包含 1, 3, 8, 7, 9值</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> iF = vector.<span class="built_in">front</span>();	<span class="comment">//iF==1</span></span><br><span class="line"><span class="type">int</span> iB = vector.<span class="built_in">back</span>();	    <span class="comment">//iB==9</span></span><br><span class="line">vector.<span class="built_in">front</span>() = <span class="number">11</span>;	    <span class="comment">//vector包含&#123;11,3,8,7,9&#125;</span></span><br><span class="line">vector.<span class="built_in">back</span>() = <span class="number">19</span>;	        <span class="comment">//vector包含&#123;11,3,8,7,19&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="8、迭代器基本原理"><a href="#8、迭代器基本原理" class="headerlink" title="8、迭代器基本原理"></a>8、迭代器基本原理</h2><ul>
+<li>迭代器是一个“可遍历STL容器内全部或部分元素”的对象。</li>
+<li>迭代器指出容器中的一个特定位置。</li>
+<li>迭代器就如同一个指针。</li>
+<li>迭代器提供对一个容器中的对象的访问方法，并且可以定义了容器中对象的范围。</li>
+<li>这里大概介绍一下迭代器的类别：<ul>
+<li><strong>输入迭代器</strong>：也有叫法称之为“只读迭代器”，它从容器中读取元素，只能一次读入一个元素向前移动，只支持一遍算法，同一个输入迭代器不能两遍遍历一个序列。</li>
+<li><strong>输出迭代器</strong>：也有叫法称之为“只写迭代器”，它往容器中写入元素，只能一次写入一个元素向前移动，只支持一遍算法，同一个输出迭代器不能两遍遍历一个序列。</li>
+<li><strong>正向迭代器</strong>：组合输入迭代器和输出迭代器的功能，还可以多次解析一个迭代器指定的位置，可以对一个值进行多次读&#x2F;写。</li>
+<li><strong>双向迭代器</strong>：组合正向迭代器的功能，还可以通过–操作符向后移动位置。</li>
+<li><strong>随机访问迭代器</strong>：组合双向迭代器的功能，还可以向前向后跳过任意个位置，可以直接访问容器中任何位置的元素。</li>
+</ul>
+</li>
+<li>目前本系列教程所用到的容器，都支持双向迭代器或随机访问迭代器，下面将会详细介绍这两个类别的迭代器。</li>
+</ul>
+<h2 id="9、双向迭代器与随机访问迭代器"><a href="#9、双向迭代器与随机访问迭代器" class="headerlink" title="9、双向迭代器与随机访问迭代器"></a>9、双向迭代器与随机访问迭代器</h2><p><em>双向迭代器支持的操作：</em><br><code>it++,  ++it,    it--,   --it，*it， itA = itB， itA == itB，itA != itB</code><br>其中<strong>list,set,multiset,map,multimap</strong>支持双向迭代器。</p>
+<p><em>随机访问迭代器支持的操作：</em><br>在双向迭代器的操作基础上添加 <code> it+=i， it-=i， it+i(或it=it+i)，it[i], itA&lt;itB,   itA&lt;=itB,  itA&gt;itB,  itA&gt;=itB</code> 的功能。<br>其中<strong>vector，deque</strong>支持随机访问迭代器。</p>
+<h2 id="10、vector与迭代器的配合使用"><a href="#10、vector与迭代器的配合使用" class="headerlink" title="10、vector与迭代器的配合使用"></a>10、vector与迭代器的配合使用</h2><p><img src="https://pic.imgdb.cn/item/63131be316f2c2beb1dcde45.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt;  vecInt;        <span class="comment">//假设包含1,3,5,7,9元素</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it;	<span class="comment">//声明容器vector&lt;int&gt;的迭代器。</span></span><br><span class="line">it = vecInt.<span class="built_in">begin</span>();        <span class="comment">// *it == 1</span></span><br><span class="line">++it;	<span class="comment">//或者it++;  *it == 3  ，前++的效率比后++的效率高，前++返回引用，后++返回值。</span></span><br><span class="line">it += <span class="number">2</span>;		<span class="comment">//*it == 7</span></span><br><span class="line">it = it+<span class="number">1</span>;		<span class="comment">//*it == 9</span></span><br><span class="line">++it;			<span class="comment">// it == vecInt.end();  此时不能再执行*it,会出错!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//正向遍历：</span></span><br><span class="line"><span class="keyword">for</span>(vector&lt;<span class="type">int</span>&gt;::iterator it=vecInt.<span class="built_in">begin</span>(); it!=vecInt.<span class="built_in">end</span>(); ++it)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> iItem = *it; </span><br><span class="line">    cout &lt;&lt; iItem;    <span class="comment">//或直接使用  cout &lt;&lt; *it;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这样子便打印出1 3 5 7 9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//逆向遍历：</span></span><br><span class="line"><span class="keyword">for</span>(vector&lt;<span class="type">int</span>&gt;::reverse_iterator rit=vecInt.<span class="built_in">rbegin</span>(); rit!=vecInt.<span class="built_in">rend</span>(); ++rit)    <span class="comment">//注意，小括号内仍是++rit</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> iItem  = *rit;</span><br><span class="line">    cout &lt;&lt; iItem;	  <span class="comment">//或直接使用cout &lt;&lt; *rit;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//此时将打印出9,7,5,3,1</span></span><br><span class="line"><span class="comment">//注意，这里迭代器的声明采用vector&lt;int&gt;::reverse_iterator，而非vector&lt;int&gt;::iterator。</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>迭代器还有其它两种声明方法：</strong><br><code>vector&lt;int&gt;::const_iterator</code> 与 <code>vector&lt;int&gt;::const_reverse_iterator</code></p>
+<p>以上两种分别是vector<int>::iterator 与vector<int>::reverse_iterator 的只读形式，使用这两种迭代器时，不会修改到容器中的值。<br>备注：不过容器中的insert和erase方法仅接受这四种类型中的iterator，其它三种不支持。<strong>《Effective STL》建议我们尽量使用iterator取代const_iterator、reverse_iterator和const_reverse_iterator。</strong></p>
+<h2 id="11、vector的插入"><a href="#11、vector的插入" class="headerlink" title="11、vector的插入"></a>11、vector的插入</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vector.insert(pos,elem);</strong>   &#x2F;&#x2F;在pos位置插入一个elem元素的拷贝，返回新数据的位置。</li>
+<li><strong>vector.insert(pos,n,elem);</strong>   &#x2F;&#x2F;在pos位置插入n个elem数据，无返回值。</li>
+<li><strong>vector.insert(pos,beg,end);</strong>   &#x2F;&#x2F;在pos位置插入[beg,end)区间的数据，无返回值</li>
+</ul>
+<p>简单案例</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecA;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecB;</span><br><span class="line"></span><br><span class="line">vecA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">vecB.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecB.<span class="built_in">push_back</span>(<span class="number">4</span>);</span><br><span class="line">vecB.<span class="built_in">push_back</span>(<span class="number">6</span>);</span><br><span class="line">vecB.<span class="built_in">push_back</span>(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">vecA.<span class="built_in">insert</span>(vecA.<span class="built_in">begin</span>(), <span class="number">11</span>);		<span class="comment">//&#123;11, 1, 3, 5, 7, 9&#125;</span></span><br><span class="line">vecA.<span class="built_in">insert</span>(vecA.<span class="built_in">begin</span>()+<span class="number">1</span>,<span class="number">2</span>,<span class="number">33</span>);	<span class="comment">//&#123;11,33,33,1,3,5,7,9&#125;</span></span><br><span class="line">vecA.<span class="built_in">insert</span>(vecA.<span class="built_in">begin</span>() , vecB.<span class="built_in">begin</span>() , vecB.<span class="built_in">end</span>() );	<span class="comment">//&#123;2,4,6,8,11,33,33,1,3,5,7,9&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="12、vector的删除"><a href="#12、vector的删除" class="headerlink" title="12、vector的删除"></a>12、vector的删除</h2><p><strong>理论知识</strong></p>
+<ul>
+<li><strong>vector.clear();</strong>  &#x2F;&#x2F;移除容器的所有数据</li>
+<li><strong>vec.erase(beg,end);</strong>  &#x2F;&#x2F;删除[beg,end)区间的数据，返回下一个数据的位置。</li>
+<li><strong>vec.erase(pos);</strong>    &#x2F;&#x2F;删除pos位置的数据，返回下一个数据的位置。</li>
+</ul>
+<p>简单案例:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除区间内的元素</span></span><br><span class="line">vecInt是用vector&lt;<span class="type">int</span>&gt;声明的容器，现已包含按顺序的<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">9</span>元素。</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator itBegin = vecInt.<span class="built_in">begin</span>() + <span class="number">1</span>;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator itEnd = vecInt.<span class="built_in">begin</span>() + <span class="number">2</span>;</span><br><span class="line">vecInt.<span class="built_in">erase</span>(itBegin, itEnd);</span><br><span class="line"><span class="comment">//此时容器vecInt包含按顺序的1,6,9三个元素。</span></span><br><span class="line"></span><br><span class="line">假设 vecInt 包含<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">3</span>，删除容器中等于<span class="number">3</span>的元素</span><br><span class="line"><span class="keyword">for</span>(vector&lt;<span class="type">int</span>&gt;::iterator it = vecInt.<span class="built_in">being</span>(); it! = vecInt.<span class="built_in">end</span>(); )    <span class="comment">//小括号里不需写  ++it</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">if</span>(*it == <span class="number">3</span>)</span><br><span class="line">   &#123;</span><br><span class="line">        it  =  vecInt.<span class="built_in">erase</span>(it);       <span class="comment">//以迭代器为参数，删除元素3，并把数据删除后的下一个元素位置返回给迭代器。</span></span><br><span class="line">        <span class="comment">//此时，不执行  ++it；  </span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123;</span><br><span class="line">       ++it;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除vecInt的所有元素</span></span><br><span class="line">vecInt.<span class="built_in">clear</span>();			<span class="comment">//容器为空</span></span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/02/STL%E5%AE%B9%E5%99%A8-Vector/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/STL/" rel="tag">STL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/09/02/STL%E5%AE%B9%E5%99%A8-Deque/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            STL容器-Deque
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/09/02/STL%E5%AE%B9%E5%99%A8-String/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">STL容器-String</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

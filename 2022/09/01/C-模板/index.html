@@ -50,17 +50,9 @@
 <body>
   <div id="app">
     
-      <canvas class="fireworks"></canvas>
-      <style>
-        .fireworks {
-          position: fixed;
-          left: 0;
-          top: 0;
-          z-index: 99999;
-          pointer-events: none;
-        }
-      </style>
       
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
       
     <main class="content on">
       <section class="outer">
@@ -96,7 +88,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">2.3k</span>
+            <span class="post-count">3k</span>
         </span>
     </span>
 
@@ -105,7 +97,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">10 分钟</span>
+            <span class="post-count">12 分钟</span>
         </span>
     </span>
 </div>
@@ -120,7 +112,7 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="C-函数模板和类模板"><a href="#C-函数模板和类模板" class="headerlink" title="C++函数模板和类模板"></a>C++函数模板和类模板</h1><h2 id="1、模板概论"><a href="#1、模板概论" class="headerlink" title="1、模板概论"></a>1、模板概论</h2><p>C++提供了函数模板(function template)。<strong>所谓函数模板，实际上是建立一个通用函数，其函数类型和形参类型不具体指定，用一个虚拟的类型来代表。这个通用函数就称为函数模板。</strong>凡是函数体相同的函数都可以用这个模板来代替，不必定义多个函数，只需在模板中定义一次即可。在调用函数时系统会根据实参的类型来取代模板中的虚拟类型，从而实现了不同函数的功能。</p>
+  <h1 id="C-函数模板和类模板"><a href="#C-函数模板和类模板" class="headerlink" title="C++函数模板和类模板"></a>C++函数模板和类模板</h1><h2 id="1、模板概论"><a href="#1、模板概论" class="headerlink" title="1、模板概论"></a>1、模板概论</h2><p>C++提供了函数模板(function template)。<strong>所谓函数模板，实际上是建立一个通用函数，其函数类型和形参类型不具体指定，用一个虚拟的类型来代表。这个通用函数就称为函数模板。</strong><span id="more"></span>凡是函数体相同的函数都可以用这个模板来代替，不必定义多个函数，只需在模板中定义一次即可。在调用函数时系统会根据实参的类型来取代模板中的虚拟类型，从而实现了不同函数的功能。</p>
 <p><img src="https://pic.imgdb.cn/item/63105f7416f2c2beb145d439.jpg"></p>
 <p>1）C++提供两种模板机制：函数模板、类模板；<br>2）类属 —— 类型参数化，又称参数模板，使得程序（算法）可以从逻辑功能上抽象，把被处理的对象（数据）类型作为参数传递。  </p>
 <p>总结：</p>
@@ -166,12 +158,42 @@
 <li>类模板用于实现类所需数据的类型参数化 </li>
 <li>类模板在表示如数组、表、图等数据结构显得特别重要，这些数据结构的表示和算法不受所包含的元素类型的影响</li>
 </ul>
-<h3 id="3-2、单个类模板语法"><a href="#3-2、单个类模板语法" class="headerlink" title="3.2、单个类模板语法"></a>3.2、单个类模板语法</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类的类型参数化 抽象的类</span></span><br><span class="line"><span class="comment">//单个类模板</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">A</span>(T t)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;t = t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">T &amp;<span class="title">getT</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> t;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	T t;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">//模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则</span></span><br><span class="line">	<span class="function">A&lt;<span class="type">int</span>&gt;  <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>; </span><br><span class="line">	a.<span class="built_in">getT</span>();</span><br><span class="line">	<span class="built_in">printAA</span>(a);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2、单个类模板语法"><a href="#3-2、单个类模板语法" class="headerlink" title="3.2、单个类模板语法"></a>3.2、单个类模板语法</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类的类型参数化 抽象的类</span></span><br><span class="line"><span class="comment">//单个类模板</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">A</span>(T t)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;t = t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">T &amp;<span class="title">getT</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> t;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	T t;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">//模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则</span></span><br><span class="line">	<span class="function">A&lt;<span class="type">int</span>&gt; <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>; </span><br><span class="line">	a.<span class="built_in">getT</span>();</span><br><span class="line">	<span class="built_in">printAA</span>(a);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-3、继承中的类模板语法"><a href="#3-3、继承中的类模板语法" class="headerlink" title="3.3、继承中的类模板语法"></a>3.3、继承中的类模板语法</h3><p><img src="https://pic.imgdb.cn/item/631079c216f2c2beb15a0ded.jpg"></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 结论: 子类从模板类继承的时候,需要让编译器知道 父类的数据类型具体是什么(数据类型的本质:固定大小内存块的别名)A&lt;int&gt; </span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A&lt;<span class="type">int</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">B</span>(<span class="type">int</span> i) : <span class="built_in">A</span>&lt;<span class="type">int</span>&gt;(i)</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">printB</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		cout&lt;&lt;<span class="string">&quot;A:&quot;</span>&lt;&lt;t&lt;&lt;endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模板与上继承</span></span><br><span class="line"><span class="comment">// 怎么样从基类继承  </span></span><br><span class="line"><span class="comment">// 若基类只有一个带参数的构造函数,子类是如何启动父类的构造函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pintBB</span><span class="params">(B &amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	b.<span class="built_in">printB</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printAA</span><span class="params">(A&lt;<span class="type">int</span>&gt; &amp;a)</span>  <span class="comment">// 类模板做函数参数 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	 <span class="comment">//</span></span><br><span class="line">	a.<span class="built_in">getT</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">A&lt;<span class="type">int</span>&gt;  <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>; <span class="comment">// 模板了中如果使用了构造函数,则遵守以前的类的构造函数的调用规则 </span></span><br><span class="line">	a.<span class="built_in">getT</span>();</span><br><span class="line">	<span class="built_in">printAA</span>(a);</span><br><span class="line"></span><br><span class="line">	<span class="function">B <span class="title">b</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">	b.<span class="built_in">printB</span>();</span><br><span class="line"></span><br><span class="line">	cout&lt;&lt;<span class="string">&quot;hello...&quot;</span>&lt;&lt;endl;</span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="3-4、继承中的类模板语法"><a href="#3-4、继承中的类模板语法" class="headerlink" title="3.4、继承中的类模板语法"></a>3.4、继承中的类模板语法</h3> 
+<h3 id="3-4、类模板语法知识体系梳理"><a href="#3-4、类模板语法知识体系梳理" class="headerlink" title="3.4、类模板语法知识体系梳理"></a>3.4、类模板语法知识体系梳理</h3><h4 id="3-4-1、总结"><a href="#3-4-1、总结" class="headerlink" title="3.4.1、总结"></a>3.4.1、总结</h4><p>归纳后，可以这样声明和使用类模板：</p>
+<ol>
+<li>先写出一个实际的类。由于其语义明确，含义清楚，一般不会出错。</li>
+<li>将此类中准备改变的类型名(如int要改变为float或char)改用一个自己指定的虚拟类型名(如上例中的numtype)。</li>
+<li>在类声明前面加入一行，格式为：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> 虚拟类型参数&gt;</span><br></pre></td></tr></table></figure>
+如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">numtype</span>&gt; <span class="comment">//注意本行末尾无分号</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Compare</span></span><br><span class="line">&#123;…&#125;; <span class="comment">// 类体</span></span><br></pre></td></tr></table></figure></li>
+<li>用类模板定义对象时用以下形式：<br> <strong>类模板名&lt;实际类型名&gt; 对象名;</strong><br> <strong>类模板名&lt;实际类型名&gt; 对象名(实参表列);</strong><br>如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Compare&lt;<span class="type">int</span>&gt; cmp;  </span><br><span class="line"><span class="function">Compare&lt;<span class="type">int</span>&gt; <span class="title">cmp</span><span class="params">(<span class="number">3</span>,<span class="number">7</span>)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li>如果在类模板外定义成员函数，应写成类模板形式：<br><strong>template &lt;class 虚拟类型参数&gt;</strong><br><strong>函数类型 类模板名&lt;虚拟类型参数&gt;::成员函数名(函数形参表列) {…}</strong></li>
+</ol>
+<p>关于类模板的几点说明：</p>
+<ol>
+<li>类模板的类型参数可以有一个或多个，每个类型前面都必须加class，如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T1</span>,<span class="keyword">class</span> <span class="title class_">T2</span>&gt;  </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">someclass</span>  </span><br><span class="line">&#123;…&#125;;  </span><br></pre></td></tr></table></figure>
+在定义对象时分别代入实际的类型名，如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">someclass&lt;<span class="type">int</span>,<span class="type">double</span>&gt; obj;</span><br></pre></td></tr></table></figure></li>
+<li>和使用类一样，使用类模板时要注意其作用域，只能在其有效作用域内用它定义对象。</li>
+<li>模板可以有层次，一个类模板可以作为基类，派生出派生模板类。</li>
+</ol>
+<h3 id="3-5、类模板中的static关键字"><a href="#3-5、类模板中的static关键字" class="headerlink" title="3.5、类模板中的static关键字"></a>3.5、类模板中的static关键字</h3><ul>
+<li>从类模板实例化的每个模板类有自己的类模板数据成员，该模板类的所有对象共享一个static数据成员</li>
+<li>和非模板类的static数据成员一样，模板类的static数据成员也应该在文件范围定义和初始化</li>
+<li>每个模板类有自己的类模板的static数据成员副本</li>
+</ul>
+<h2 id="4、小结"><a href="#4、小结" class="headerlink" title="4、小结"></a>4、小结</h2><ul>
+<li>模板是C++类型参数化的多态工具。C++提供函数模板和类模板。</li>
+<li>模板定义以模板说明开始。类属参数必须在模板定义中至少出现一次。</li>
+<li>同一个类属参数可以用于多个模板。</li>
+<li>类属参数可用于函数的参数类型、返回类型和声明函数中的变量。</li>
+<li>模板由编译器根据实际数据类型实例化，生成可执行代码。实例化的函数。模板称为模板函数；实例化的类模板称为模板类。</li>
+<li>函数模板可以用多种方式重载。</li>
+<li>类模板可以在类层次中使用。</li>
+</ul>
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -570,12 +592,10 @@
 
 <!-- ClickBoom1 -->
 
-<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
-
-<script src="/js/clickBoom1.js"></script>
- 
 <!-- ClickBoom2 -->
-
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
 <!-- CodeCopy -->
  
 <link rel="stylesheet" href="/css/clipboard.css">
