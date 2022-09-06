@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>STL容器-Map和multimap |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-STL容器-Map和multimap"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  STL容器-Map和multimap
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Map%E5%92%8Cmultimap/" class="article-date">
+  <time datetime="2022-09-05T03:21:31.000Z" itemprop="datePublished">2022-09-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/STL/">STL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="STL容器-Map和multimap"><a href="#STL容器-Map和multimap" class="headerlink" title="STL容器-Map和multimap"></a>STL容器-Map和multimap</h1><h2 id="1、map-x2F-multimap的简介"><a href="#1、map-x2F-multimap的简介" class="headerlink" title="1、map&#x2F;multimap的简介"></a>1、map&#x2F;multimap的简介</h2><ul>
+<li>map是标准的关联式容器，一个map是一个键值对序列，即(key,value)对。它提供基于key的快速检索能力。<span id="more"></span></li>
+<li>map中key值是唯一的。集合中的元素按一定的顺序排列。元素插入过程是按排序规则插入，所以不能指定插入位置。</li>
+<li><strong>map的具体实现采用红黑树变体的平衡二叉树的数据结构</strong>。在插入操作和删除操作上比vector快。</li>
+<li>map可以直接存取key所对应的value，支持[]操作符，如map[key]&#x3D;value。</li>
+<li>multimap与map的区别：map支持唯一键值，每个键只能出现一次；而multimap中相同键可以出现多次。multimap不支持[]操作符。</li>
+<li><code>#include &lt;map&gt;</code></li>
+</ul>
+<h2 id="2、map-x2F-multimap对象的默认构造"><a href="#2、map-x2F-multimap对象的默认构造" class="headerlink" title="2、map&#x2F;multimap对象的默认构造"></a>2、map&#x2F;multimap对象的默认构造</h2><p>map&#x2F;multimap采用模板类实现，对象的默认构造形式：<br><code>map&lt;T1,T2&gt; mapTT; </code><br><code>multimap&lt;T1,T2&gt;  multimapTT;  </code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如：</span><br><span class="line">map&lt;int, char&gt; mapA;</span><br><span class="line">map&lt;string,float&gt; mapB;</span><br><span class="line">//其中T1,T2还可以用各种指针类型或自定义类型</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、map的插入与迭代器"><a href="#3、map的插入与迭代器" class="headerlink" title="3、map的插入与迭代器"></a>3、map的插入与迭代器</h2><ul>
+<li><p><strong>map.insert(…);</strong>    &#x2F;&#x2F;往容器插入元素，返回pair&lt;iterator,bool&gt;</p>
+</li>
+<li><p><strong>在map中插入元素的三种方式：</strong><br>假设  map&lt;int, string&gt; mapStu;</p>
+<ul>
+<li>通过pair的方式插入对象<br>  <code>mapStu.insert(  pair&lt;int,string&gt;(3,&quot;小张&quot;)  );</code></li>
+<li>通过pair的方式插入对象<br>  <code>mapStu.inset(make_pair(-1, “校长-1”));</code></li>
+<li>通过value_type的方式插入对象<br>  <code>mapStu.insert(  map&lt;int,string&gt;::value_type(1,&quot;小李&quot;)  );</code></li>
+<li>通过数组的方式插入值<br>  <code>mapStu[3] = “小刘&quot;;</code><br>  <code>mapStu[5] = “小王&quot;；</code></li>
+</ul>
+</li>
+<li><p>前三种方法，采用的是insert()方法，该方法返回值为pair&lt;iterator,bool&gt; </p>
+</li>
+<li><p>第四种方法非常直观，但存在一个性能的问题。插入3时，先在mapStu中查找主键为3的项，若没发现，则将一个键为3，值为初始化值的对组插入到mapStu中，然后再将值修改成“小刘”。若发现已存在3这个键，则修改这个键对应的value。</p>
+</li>
+<li><p>string strName &#x3D; mapStu[2];   &#x2F;&#x2F;取操作或插入操作</p>
+</li>
+<li><p>只有当mapStu存在2这个键时才是正确的取操作，否则会自动插入一个实例，键为2，值为初始化值。</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设  map&lt;int, string&gt; mapA;</span></span><br><span class="line">pair&lt; map&lt;<span class="type">int</span>,string&gt;::iterator, <span class="type">bool</span> &gt; pairResult = mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">3</span>,<span class="string">&quot;小张&quot;</span>));			       <span class="comment">//插入方式一</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> iFirstFirst = (pairResult.first)-&gt;first;		 <span class="comment">//iFirst == 3;</span></span><br><span class="line">string strFirstSecond = (pairResult.first)-&gt;second;	 <span class="comment">//strFirstSecond为&quot;小张&quot;</span></span><br><span class="line"><span class="type">bool</span> bSecond = pairResult.second;					 <span class="comment">//bSecond == true;</span></span><br><span class="line">		</span><br><span class="line">mapA.<span class="built_in">insert</span>(map&lt;<span class="type">int</span>,string&gt;::<span class="built_in">value_type</span>(<span class="number">1</span>,<span class="string">&quot;小李&quot;</span>));	 <span class="comment">//插入方式二</span></span><br><span class="line"></span><br><span class="line">mapA[<span class="number">3</span>] = <span class="string">&quot;小刘&quot;</span>;			    <span class="comment">//修改value</span></span><br><span class="line">mapA[<span class="number">5</span>] = <span class="string">&quot;小王&quot;</span>;			    <span class="comment">//插入方式三</span></span><br><span class="line"></span><br><span class="line">string str1 = mapA[<span class="number">2</span>];			<span class="comment">//执行插入 string() 操作，返回的str1的字符串内容为空。</span></span><br><span class="line">string str2 = mapA[<span class="number">3</span>];			<span class="comment">//取得value，str2为&quot;小刘&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//迭代器遍历</span></span><br><span class="line"><span class="keyword">for</span> (map&lt;<span class="type">int</span>,string&gt;::iterator it=mapA.<span class="built_in">begin</span>(); it!=mapA.<span class="built_in">end</span>(); ++it)</span><br><span class="line">&#123;</span><br><span class="line">    pair&lt;<span class="type">int</span>, string&gt; pr = *it;</span><br><span class="line">    <span class="type">int</span> iKey = pr.first;</span><br><span class="line">    string strValue = pr.second;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//map.rbegin()与map.rend()  略。</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>map&lt;T1,T2,less<T1> &gt;  mapA;</strong>    &#x2F;&#x2F;该容器是按键的升序方式排列元素。未指定函数对象，默认采用less<T1>函数对象。</li>
+<li><strong>map&lt;T1,T2,greater<T1>&gt; mapB;</strong>   &#x2F;&#x2F;该容器是按键的降序方式排列元素。</li>
+<li>less<T1>与greater<T1> 可以替换成其它的函数对象functor。</li>
+<li>可编写自定义函数对象以进行自定义类型的比较，使用方法与set构造时所用的函数对象一样。</li>
+<li><strong>map.begin();</strong>  &#x2F;&#x2F;返回容器中第一个数据的迭代器。</li>
+<li><strong>map.end();</strong>    &#x2F;&#x2F;返回容器中最后一个数据之后的迭代器。</li>
+<li><strong>map.rbegin();</strong> &#x2F;&#x2F;返回容器中倒数第一个元素的迭代器。</li>
+<li><strong>map.rend();</strong>   &#x2F;&#x2F;返回容器中倒数最后一个元素的后面的迭代器。</li>
+</ul>
+<h2 id="4、map对象的拷贝构造与赋值"><a href="#4、map对象的拷贝构造与赋值" class="headerlink" title="4、map对象的拷贝构造与赋值"></a>4、map对象的拷贝构造与赋值</h2><ul>
+<li><strong>map(const map &amp;mp);</strong>		        &#x2F;&#x2F;拷贝构造函数</li>
+<li><strong>map&amp; operator&#x3D;(const map &amp;mp);</strong>	&#x2F;&#x2F;重载等号操作符</li>
+<li><strong>map.swap(mp);</strong>				        &#x2F;&#x2F;交换两个集合容器</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">例如:</span><br><span class="line">map&lt;<span class="type">int</span>, string&gt; mapA;</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">3</span>,<span class="string">&quot;小张&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">1</span>,<span class="string">&quot;小杨&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">7</span>,<span class="string">&quot;小赵&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">5</span>,<span class="string">&quot;小王&quot;</span>));	</span><br><span class="line"></span><br><span class="line"><span class="function">map&lt;<span class="type">int</span> ,string&gt; <span class="title">mapB</span><span class="params">(mapA)</span></span>;			<span class="comment">//拷贝构造</span></span><br><span class="line"></span><br><span class="line">map&lt;<span class="type">int</span>, string&gt; mapC;</span><br><span class="line">mapC = mapA;							<span class="comment">//赋值</span></span><br><span class="line"></span><br><span class="line">mapC[<span class="number">3</span>] = <span class="string">&quot;老张&quot;</span>;</span><br><span class="line">mapC.<span class="built_in">swap</span>(mapA);			            <span class="comment">//交换</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5、map的大小"><a href="#5、map的大小" class="headerlink" title="5、map的大小"></a>5、map的大小</h2><ul>
+<li><strong>map.size();</strong>	&#x2F;&#x2F;返回容器中元素的数目</li>
+<li><strong>map.empty();</strong>  &#x2F;&#x2F;判断容器是否为空</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">map&lt;<span class="type">int</span>, string&gt; mapA;</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">3</span>,<span class="string">&quot;小张&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">1</span>,<span class="string">&quot;小杨&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">7</span>,<span class="string">&quot;小赵&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">5</span>,<span class="string">&quot;小王&quot;</span>));	</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (mapA.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> iSize = mapA.<span class="built_in">size</span>();		<span class="comment">//iSize == 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、map的删除"><a href="#6、map的删除" class="headerlink" title="6、map的删除"></a>6、map的删除</h2><ul>
+<li><strong>map.clear();</strong>		&#x2F;&#x2F;删除所有元素</li>
+<li><strong>map.erase(pos);</strong>	&#x2F;&#x2F;删除pos迭代器所指的元素，返回下一个元素的迭代器。</li>
+<li><strong>map.erase(beg,end);</strong>    &#x2F;&#x2F;删除区间[beg,end)的所有元素	，返回下一个元素的迭代器。</li>
+<li><strong>map.erase(keyElem);</strong>    &#x2F;&#x2F;删除容器中key为keyElem的对组。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">map&lt;<span class="type">int</span>, string&gt; mapA;</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">3</span>,<span class="string">&quot;小张&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">1</span>,<span class="string">&quot;小杨&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">7</span>,<span class="string">&quot;小赵&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">5</span>,<span class="string">&quot;小王&quot;</span>));	</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除区间内的元素</span></span><br><span class="line">map&lt;<span class="type">int</span>,string&gt;::iterator itBegin=mapA.<span class="built_in">begin</span>();</span><br><span class="line">++ itBegin;</span><br><span class="line">++ itBegin;</span><br><span class="line">map&lt;<span class="type">int</span>,string&gt;::iterator itEnd=mapA.<span class="built_in">end</span>();</span><br><span class="line">mapA.<span class="built_in">erase</span>(itBegin,itEnd);			<span class="comment">//此时容器mapA包含按顺序的&#123;1,&quot;小杨&quot;&#125;&#123;3,&quot;小张&quot;&#125;两个元素。</span></span><br><span class="line"></span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">7</span>,<span class="string">&quot;小赵&quot;</span>));	</span><br><span class="line">mapA.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>,string&gt;(<span class="number">5</span>,<span class="string">&quot;小王&quot;</span>));	</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除容器中第一个元素</span></span><br><span class="line">mapA.<span class="built_in">erase</span>(mapA.<span class="built_in">begin</span>());		    <span class="comment">//此时容器mapA包含了按顺序的&#123;3,&quot;小张&quot;&#125;&#123;5,&quot;小王&quot;&#125;&#123;7,&quot;小赵&quot;&#125;三个元素</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//删除容器中key为5的元素</span></span><br><span class="line">mapA.<span class="built_in">erase</span>(<span class="number">5</span>);    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//删除mapA的所有元素</span></span><br><span class="line">mapA.<span class="built_in">clear</span>();			            <span class="comment">//容器为空</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7、map的查找"><a href="#7、map的查找" class="headerlink" title="7、map的查找"></a>7、map的查找</h2><ul>
+<li><strong>map.find(key);</strong>        &#x2F;&#x2F;查找键key是否存在，若存在，返回该键的元素的迭代器；若不存在，返回map.end();</li>
+<li><strong>map.count(keyElem);</strong>   &#x2F;&#x2F;返回容器中key为keyElem的对组个数。对map来说，要么是0，要么是1。对multimap来说，值可能大于1。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">map&lt;<span class="type">int</span>,string&gt;::iterator it=mapStu.<span class="built_in">find</span>(<span class="number">3</span>);</span><br><span class="line"><span class="keyword">if</span>(it == mapStu.<span class="built_in">end</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//没找到</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//找到了</span></span><br><span class="line">    pair&lt;<span class="type">int</span>, string&gt; pairStu = *it;</span><br><span class="line">    <span class="type">int</span> iID = pairStu.first;		    <span class="comment">//或 int iID = it-&gt;first;</span></span><br><span class="line">    string strName = pairStu.second;	<span class="comment">//或 string strName = it-&gt;second;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>map.lower_bound(keyElem);</strong>   &#x2F;&#x2F;返回第一个key&gt;&#x3D;keyElem元素的迭代器。</li>
+<li><strong>map.upper_bound(keyElem);</strong>	  &#x2F;&#x2F;返回第一个key&gt;keyElem元素的迭代器。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//例如：  mapStu是用map&lt;int,string&gt;声明的容器，已包含&#123;1,&quot;小李&quot;&#125;&#123;3,&quot;小张&quot;&#125;&#123;5,&quot;小王&quot;&#125;&#123;7,&quot;小赵&quot;&#125;&#123;9,&quot;小陈&quot;&#125;元素。</span></span><br><span class="line">map&lt;<span class="type">int</span>,string&gt;::iterator it;</span><br><span class="line">it = mapStu.<span class="built_in">lower_bound</span>(<span class="number">5</span>);  <span class="comment">//it-&gt;first==5    it-&gt;second==&quot;小王&quot;</span></span><br><span class="line">it = mapStu.<span class="built_in">upper_bound</span>(<span class="number">5</span>);  <span class="comment">//it-&gt;first==7    it-&gt;second==&quot;小赵&quot;</span></span><br><span class="line">it = mapStu.<span class="built_in">lower_bound</span>(<span class="number">6</span>);  <span class="comment">//it-&gt;first==7    it-&gt;second==&quot;小赵&quot;</span></span><br><span class="line">it = mapStu.<span class="built_in">upper_bound</span>(<span class="number">6</span>);  <span class="comment">//it-&gt;first==7    it-&gt;second==&quot;小赵&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>map.equal_range(keyElem);</strong>	 &#x2F;&#x2F;返回容器中key与keyElem相等的上下限的两个迭代器。上限是闭区间，下限是开区间，如[beg,end)。</li>
+</ul>
+<p>以上函数返回两个迭代器，而这两个迭代器被封装在pair中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">例如 map&lt;<span class="type">int</span>,string&gt; mapStu;</span><br><span class="line">...  <span class="comment">//往mapStu容器插入元素&#123;1,&quot;小李&quot;&#125;&#123;3,&quot;小张&quot;&#125;&#123;5,&quot;小王&quot;&#125;&#123;7,&quot;小赵&quot;&#125;&#123;9,&quot;小陈&quot;&#125;</span></span><br><span class="line">pair&lt; map&lt;<span class="type">int</span>,string&gt;::iterator , map&lt;<span class="type">int</span>,string&gt;::iterator &gt; pairIt = mapStu.<span class="built_in">equal_range</span>(<span class="number">5</span>);</span><br><span class="line">map&lt;<span class="type">int</span>, string&gt;::iterator itBeg = pairIt.first;</span><br><span class="line">map&lt;<span class="type">int</span>, string&gt;::iterator itEnd = pairIt.second;</span><br><span class="line"><span class="comment">//此时 itBeg-&gt;first==5  ,  itEnd-&gt;first == 7,</span></span><br><span class="line">itBeg-&gt;second==<span class="string">&quot;小王&quot;</span>, itEnd-&gt;second==<span class="string">&quot;小赵&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="8、Multimap-案例"><a href="#8、Multimap-案例" class="headerlink" title="8、Multimap 案例:"></a>8、Multimap 案例:</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1个key值可以对应多个valude  =分组 </span></span><br><span class="line"><span class="comment">//公司有销售部 sale （员工2名）、技术研发部 development （1人）、财务部 Financial （2人） </span></span><br><span class="line"><span class="comment">//人员信息有：姓名，年龄，电话、工资等组成</span></span><br><span class="line"><span class="comment">//通过 multimap进行 信息的插入、保存、显示</span></span><br><span class="line"><span class="comment">//分部门显示员工信息 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//略。</span></span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/05/STL%E5%AE%B9%E5%99%A8-Map%E5%92%8Cmultimap/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/STL/" rel="tag">STL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/09/06/STL%E5%AE%B9%E5%99%A8-%E5%AE%B9%E5%99%A8%E5%85%B1%E6%80%A7%E6%9C%BA%E5%88%B6%E7%A0%94%E7%A9%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            STL容器-容器共性机制研究
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Set%E5%92%8Cmultiset/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">STL容器-Set和multiset</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

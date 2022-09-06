@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>归档 |  Lv blog</title>
+      <title>STL算法-算法基础 |  Lv blog</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -56,262 +56,219 @@
       
     <main class="content on">
       <section class="outer">
+  <article
+  id="post-STL算法-算法基础"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  STL算法-算法基础
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2022-09-06T03:29:41.000Z" itemprop="datePublished">2022-09-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/STL/">STL</a>
+  </div>
   
-  <ul class="ads">
-    
-        <li>
-            <a target="_blank" rel="noopener" href="https://whhbh.net">
-                <img src="https://pic.imgdb.cn/item/630f079316f2c2beb1993808.jpg" width="300" alt="2022武汉花博汇主题烟火秀">
-            </a>
-        </li>
-    
-        <li>
-            <a target="_blank" rel="noopener" href="http://hghsd.com">
-                <img src="https://pic.imgdb.cn/item/630f091016f2c2beb19a54d7.jpg" width="300" alt="武汉后官湖生态湿地公园">
-            </a>
-        </li>
-    
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">639</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">2 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="STL容器-算法基础"><a href="#STL容器-算法基础" class="headerlink" title="STL容器-算法基础"></a>STL容器-算法基础</h1><h2 id="1、算法概述"><a href="#1、算法概述" class="headerlink" title="1、算法概述"></a>1、算法概述</h2><ul>
+<li>算法部分主要由头文件<code>&lt;algorithm&gt;，&lt;numeric&gt;和&lt;functional&gt;</code>组成。</li>
+<li><code>&lt;algorithm&gt;</code>是所有STL头文件中最大的一个，其中常用到的功能范围涉及到比较、交换、查找、遍历操作、复制、修改、反转、排序、合并等等。<span id="more"></span></li>
+<li><code>&lt;numeric&gt;</code>体积很小，只包括几个在序列上面进行简单数学运算的模板函数，包括加法和乘法在序列上的一些操作。</li>
+<li><code>&lt;functional&gt;</code>中则定义了一些模板类，用以声明函数对象。</li>
+<li>STL提供了大量实现算法的模版函数，只要我们熟悉了STL之后，许多代码可以被大大的化简，只需要通过调用一两个算法模板，就可以完成所需要的功能，从而大大地提升效率。</li>
+<li><code>#include &lt;algorithm&gt;</code></li>
+<li><code>#include &lt;numeric&gt;</code></li>
+<li><code>#include &lt;functional&gt;</code></li>
 </ul>
-  
-  
-  <article class="articles">
-    
-    
-    <h1 class="page-type-title">归档</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2022" class="archive-year">2022</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" class="archive-article-date">
-  <time datetime="2022-09-06T03:31:36.000Z" itemprop="datePublished">09/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-    >STL算法-常用算法介绍</a> 
-</h2>
+<h2 id="2、STL中算法分类"><a href="#2、STL中算法分类" class="headerlink" title="2、STL中算法分类"></a>2、STL中算法分类</h2><ul>
+<li>操作对象 <ul>
+<li>直接改变容器的内容</li>
+<li>将原容器的内容复制一份,修改其副本,然后传回该副本</li>
+</ul>
+</li>
+<li>功能: <ul>
+<li>非可变序列算法 指不直接修改其所操作的容器内容的算法<ul>
+<li>计数算法	 count、count_if</li>
+<li>搜索算法	 search、find、find_if、find_first_of、…</li>
+<li>比较算法	 equal、mismatch、lexicographical_compare</li>
+</ul>
+</li>
+<li>可变序列算法 指可以修改它们所操作的容器内容的算法<ul>
+<li>删除算法	 remove、remove_if、remove_copy、…</li>
+<li>修改算法	 for_each、transform</li>
+<li>排序算法	 sort、stable_sort、partial_sort、</li>
+</ul>
+</li>
+<li>排序算法 包括对序列进行排序和合并的算法、搜索算法以及有序序列上的集合操作</li>
+<li>数值算法 对容器内容进行数值计算</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、查找算法-13个-：判断容器中是否包含某个值"><a href="#3、查找算法-13个-：判断容器中是否包含某个值" class="headerlink" title="3、查找算法(13个)：判断容器中是否包含某个值"></a>3、查找算法(13个)：判断容器中是否包含某个值</h2><p><img src="https://pic.imgdb.cn/item/6316e17916f2c2beb1844e5f.jpg"></p>
+<h2 id="4、堆算法-4个"><a href="#4、堆算法-4个" class="headerlink" title="4、堆算法(4个)"></a>4、堆算法(4个)</h2><p><img src="https://pic.imgdb.cn/item/6316e19b16f2c2beb184719d.jpg"></p>
+<h2 id="5、关系算法-8个"><a href="#5、关系算法-8个" class="headerlink" title="5、关系算法(8个)"></a>5、关系算法(8个)</h2><p><img src="https://pic.imgdb.cn/item/6316e1c616f2c2beb184aa79.jpg"></p>
+<h2 id="6、集合算法-4个"><a href="#6、集合算法-4个" class="headerlink" title="6、集合算法(4个)"></a>6、集合算法(4个)</h2><p><img src="https://pic.imgdb.cn/item/6316e1e816f2c2beb184e011.jpg"></p>
+<h2 id="7、列组合算法-2个"><a href="#7、列组合算法-2个" class="headerlink" title="7、列组合算法(2个)"></a>7、列组合算法(2个)</h2><p>提供计算给定集合按一定顺序的所有可能排列组合<br><img src="https://pic.imgdb.cn/item/6316e27a16f2c2beb18581a5.jpg"></p>
+<h2 id="8、排序和通用算法-14个-：提供元素排序策略"><a href="#8、排序和通用算法-14个-：提供元素排序策略" class="headerlink" title="8、排序和通用算法(14个)：提供元素排序策略"></a>8、排序和通用算法(14个)：提供元素排序策略</h2><p><img src="https://pic.imgdb.cn/item/6316e2b216f2c2beb185b68e.jpg"></p>
+<h2 id="9、删除和替换算法-15个"><a href="#9、删除和替换算法-15个" class="headerlink" title="9、删除和替换算法(15个)"></a>9、删除和替换算法(15个)</h2><p><img src="https://pic.imgdb.cn/item/6316e2e616f2c2beb185ef9d.jpg"></p>
+<h2 id="10、生成和变异算法-6个"><a href="#10、生成和变异算法-6个" class="headerlink" title="10、生成和变异算法(6个)"></a>10、生成和变异算法(6个)</h2><p><img src="https://pic.imgdb.cn/item/6316e30716f2c2beb1861190.jpg"></p>
+<h2 id="11、算数算法-4个"><a href="#11、算数算法-4个" class="headerlink" title="11、算数算法(4个)"></a>11、算数算法(4个)</h2><p><img src="https://pic.imgdb.cn/item/6316e33216f2c2beb18643d7.jpg"></p>
+<h2 id="12、常用算法汇总"><a href="#12、常用算法汇总" class="headerlink" title="12、常用算法汇总"></a>12、常用算法汇总</h2><ul>
+<li>常用的查找算法：<br>adjacent_find()（ adjacent 是邻近的意思）,binary_search(),count(),<br>count_if(),equal_range(),find(),find_if()。</li>
+<li>常用的排序算法：<br>merge(),sort(),random_shuffle()（shuffle是洗牌的意思） ,reverse()。</li>
+<li>常用的拷贝和替换算法：<br>copy(), replace(),<br>replace_if(),swap()</li>
+<li>常用的算术和生成算法：<br>accumulate()（ accumulate 是求和的意思）,fill(),。</li>
+<li>常用的集合算法：<br>set_union(),set_intersection(),<br>set_difference()。</li>
+<li>常用的遍历算法：<br>for_each(), transform()（ transform 是变换的意思）</li>
+</ul>
  
-
-    </header>
-    
-    
-  </div>
-</article>
+      <!-- reward -->
       
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/" class="archive-article-date">
-  <time datetime="2022-09-06T03:30:29.000Z" itemprop="datePublished">09/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/"
-    >STL算法-算法中函数对象和谓词</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" class="archive-article-date">
-  <time datetime="2022-09-06T03:29:41.000Z" itemprop="datePublished">09/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/"
-    >STL算法-算法基础</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/06/STL%E5%AE%B9%E5%99%A8-%E5%AE%B9%E5%99%A8%E5%85%B1%E6%80%A7%E6%9C%BA%E5%88%B6%E7%A0%94%E7%A9%B6/" class="archive-article-date">
-  <time datetime="2022-09-06T03:09:53.000Z" itemprop="datePublished">09/06</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/06/STL%E5%AE%B9%E5%99%A8-%E5%AE%B9%E5%99%A8%E5%85%B1%E6%80%A7%E6%9C%BA%E5%88%B6%E7%A0%94%E7%A9%B6/"
-    >STL容器-容器共性机制研究</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Map%E5%92%8Cmultimap/" class="archive-article-date">
-  <time datetime="2022-09-05T03:21:31.000Z" itemprop="datePublished">09/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Map%E5%92%8Cmultimap/"
-    >STL容器-Map和multimap</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Set%E5%92%8Cmultiset/" class="archive-article-date">
-  <time datetime="2022-09-05T03:19:54.000Z" itemprop="datePublished">09/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Set%E5%92%8Cmultiset/"
-    >STL容器-Set和multiset</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-List/" class="archive-article-date">
-  <time datetime="2022-09-05T02:38:07.000Z" itemprop="datePublished">09/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-List/"
-    >STL容器-List</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Queue/" class="archive-article-date">
-  <time datetime="2022-09-05T02:27:45.000Z" itemprop="datePublished">09/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Queue/"
-    >STL容器-Queue</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Stack/" class="archive-article-date">
-  <time datetime="2022-09-05T01:55:59.000Z" itemprop="datePublished">09/05</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/05/STL%E5%AE%B9%E5%99%A8-Stack/"
-    >STL容器-Stack</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/09/03/C-%E6%A0%87%E5%87%86%E5%BA%93/" class="archive-article-date">
-  <time datetime="2022-09-03T01:07:10.000Z" itemprop="datePublished">09/03</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2022/09/03/C-%E6%A0%87%E5%87%86%E5%BA%93/"
-    >C++标准库</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/2/">下一页</a>
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/STL/" rel="tag">STL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            STL算法-算法中函数对象和谓词
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/09/06/STL%E5%AE%B9%E5%99%A8-%E5%AE%B9%E5%99%A8%E5%85%B1%E6%80%A7%E6%9C%BA%E5%88%B6%E7%A0%94%E7%A9%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">STL容器-容器共性机制研究</div>
+      </a>
+    
   </nav>
-  
+
+   
+ 
+   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -460,6 +417,22 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
 
 <script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
 <link

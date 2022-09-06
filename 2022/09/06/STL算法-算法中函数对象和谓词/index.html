@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>STL算法-算法中函数对象和谓词 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-STL算法-算法中函数对象和谓词"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  STL算法-算法中函数对象和谓词
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/" class="article-date">
+  <time datetime="2022-09-06T03:30:29.000Z" itemprop="datePublished">2022-09-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/STL/">STL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="STL容器-算法中函数对象和谓词"><a href="#STL容器-算法中函数对象和谓词" class="headerlink" title="STL容器-算法中函数对象和谓词"></a>STL容器-算法中函数对象和谓词</h1><h2 id="1、函数对象和谓词定义"><a href="#1、函数对象和谓词定义" class="headerlink" title="1、函数对象和谓词定义"></a>1、函数对象和谓词定义</h2><p><strong>函数对象：</strong><br>重载函数调用操作符的类，其对象常称为函数对象（function object），即它们是行为类似函数的对象。一个类对象，表现出一个函数的特征，就是通过“对象名+(参数列表)”的方式使用一个类对象，如果没有上下文，完全可以把它看作一个函数对待。<span id="more"></span><br>这是通过重载类的operator()来实现的。  </p>
+<p>“在标准库中，函数对象被广泛地使用以获得弹性”，标准库中的很多算法都可以使用函数对象或者函数来作为自定的回调行为。</p>
+<p><strong>谓词：</strong><br>一元函数对象：函数参数1个；<br>二元函数对象：函数参数2个；<br>一元谓词 函数参数1个，函数返回值是bool类型，可以作为一个判断式<br>二元谓词 函数参数2个，函数返回值是bool类型<br>谓词可以是一个仿函数，也可以是一个回调函数。</p>
+<p>一元谓词函数举例如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1，判断给出的string对象的长度是否小于6</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">GT6</span><span class="params">(<span class="type">const</span> string &amp;s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> s.<span class="built_in">size</span>() &gt;= <span class="number">6</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//2,判断给出的int是否在3到8之间</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Compare</span><span class="params">( <span class="type">int</span> i )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ( i &gt;= <span class="number">3</span> &amp;&amp; i &lt;= <span class="number">8</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>二元谓词举例如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1，比较两个string对象，返回一个bool值，指出第一个string是否比第二个短</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isShorter</span><span class="params">(<span class="type">const</span> string &amp;s1, <span class="type">const</span> string &amp;s2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> s1.<span class="built_in">size</span>() &lt; s2.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、一元函数对象案例"><a href="#2、一元函数对象案例" class="headerlink" title="2、一元函数对象案例"></a>2、一元函数对象案例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1普通类 重载 函数调用操作符</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">FuncShowElemt</span><span class="params">(T &amp;t)</span>  <span class="comment">//普通函数 不能像 仿函数那样记录状态</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; t &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">showChar</span><span class="params">(<span class="type">char</span> &amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; t &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//函数模板 重载 函数调用操作符</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ShowElemt</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">ShowElemt</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		n = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(T &amp;t)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		n++;</span><br><span class="line">		cout &lt;&lt; t &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">printCount</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		cout &lt;&lt; n &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> n;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1 函数对象 基本使用</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line">	<span class="built_in">FuncShowElemt</span>&lt;<span class="type">int</span>&gt;(a); <span class="comment">//普通的函数调用</span></span><br><span class="line"></span><br><span class="line">	ShowElemt&lt;<span class="type">int</span>&gt; showElemt; <span class="comment">//函数对象 </span></span><br><span class="line">	<span class="built_in">showElemt</span>(a); <span class="comment">//函数对象调用 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、一元谓词案例"><a href="#3、一元谓词案例" class="headerlink" title="3、一元谓词案例"></a>3、一元谓词案例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1元谓词 例子</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Isdiv</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Isdiv</span>(<span class="type">const</span> T &amp;divisor)         <span class="comment">//</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;divisor = divisor;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(T &amp;t)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> (t%divisor == <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	T divisor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt; v2;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">10</span>; i&lt;<span class="number">33</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v2.<span class="built_in">push_back</span>(i);</span><br><span class="line">	&#125;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt;::iterator it;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">4</span>;</span><br><span class="line">	<span class="function">Isdiv&lt;<span class="type">int</span>&gt; <span class="title">mydiv</span><span class="params">(a)</span></span>;</span><br><span class="line">	<span class="comment">// _InIt find_if(_InIt _First, _InIt _Last, _Pr _Pred)   //返回的是迭代器</span></span><br><span class="line">	it = <span class="built_in">find_if</span>(v2.<span class="built_in">begin</span>(), v2.<span class="built_in">end</span>(), <span class="built_in">Isdiv</span>&lt;<span class="type">int</span>&gt;(<span class="number">4</span>));</span><br><span class="line">	<span class="keyword">if</span> (it != v2.<span class="built_in">end</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;第一个被4整除的数是：&quot;</span> &lt;&lt; *it &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、二元函数对象案例"><a href="#4、二元函数对象案例" class="headerlink" title="4、二元函数对象案例"></a>4、二元函数对象案例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SumAdd</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="function">T <span class="title">operator</span><span class="params">()</span><span class="params">(T &amp;t1, T &amp;t2)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> t1 + t2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printE</span><span class="params">(T &amp;t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (vector&lt;<span class="type">int</span>&gt;::iterator it = t.<span class="built_in">begin</span>(); it!=t.<span class="built_in">end</span>(); it++ )</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; *it &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printVector</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (vector&lt;<span class="type">int</span>&gt;::iterator it = v.<span class="built_in">begin</span>(); it!=v.<span class="built_in">end</span>(); it++ )</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; *it &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span>  <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt; v1, v2 ;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt; v3;</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">	v2.<span class="built_in">push_back</span>(<span class="number">4</span>);</span><br><span class="line">	v2.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">	v2.<span class="built_in">push_back</span>(<span class="number">6</span>);</span><br><span class="line"></span><br><span class="line">	v3.<span class="built_in">resize</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//transform(v1.begin(), v1.end(), v2.begin(),v3.begin(), SumAdd&lt;int&gt;());</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	template&lt;class _InIt1,</span></span><br><span class="line"><span class="comment">	class _InIt2,</span></span><br><span class="line"><span class="comment">	class _OutIt,</span></span><br><span class="line"><span class="comment">	class _Fn2&gt; inline</span></span><br><span class="line"><span class="comment">		_OutIt transform(_InIt1 _First1, _InIt1 _Last1,</span></span><br><span class="line"><span class="comment">		_InIt2 _First2, _OutIt _Dest, _Fn2 _Func)</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	vector&lt;<span class="type">int</span>&gt;::iterator it = <span class="built_in">transform</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), v2.<span class="built_in">begin</span>(),v3.<span class="built_in">begin</span>(), <span class="built_in">SumAdd</span>&lt;<span class="type">int</span>&gt;());</span><br><span class="line">	cout &lt;&lt; *it &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">printE</span>(v3);	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、二元谓词案例"><a href="#5、二元谓词案例" class="headerlink" title="5、二元谓词案例"></a>5、二元谓词案例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">current</span><span class="params">(<span class="type">int</span> &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; v &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">MyCompare</span><span class="params">(<span class="type">const</span> <span class="type">int</span> &amp;a, <span class="type">const</span> <span class="type">int</span> &amp;b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &lt; b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">v</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v[i] = <span class="built_in">rand</span>() % <span class="number">100</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for_each(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), current);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), MyCompare );</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, v[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、预定义函数对象和函数适配器"><a href="#6、预定义函数对象和函数适配器" class="headerlink" title="6、预定义函数对象和函数适配器"></a>6、预定义函数对象和函数适配器</h2><ol>
+<li>预定义函数对象基本概念：标准模板库STL提前定义了很多预定义函数对象，#include <functional> 必须包含。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1使用预定义函数对象：</span></span><br><span class="line"><span class="comment">//类模板plus&lt;&gt; 的实现了： 不同类型的数据进行加法运算</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	plus&lt;<span class="type">int</span>&gt; intAdd;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> y = <span class="number">20</span>;</span><br><span class="line">	<span class="type">int</span> z = <span class="built_in">intAdd</span>(x, y); <span class="comment">//等价于 x + y </span></span><br><span class="line">	cout &lt;&lt; z &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	plus&lt;string&gt; stringAdd;</span><br><span class="line">	string myc = <span class="built_in">stringAdd</span>(<span class="string">&quot;aaa&quot;</span>, <span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">	cout &lt;&lt; myc &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	vector&lt;string&gt; v1;</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;zzzz&quot;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//缺省情况下，sort()用底层元素类型的小于操作符以升序排列容器的元素。</span></span><br><span class="line">	<span class="comment">//为了降序，可以传递预定义的类模板greater,它调用底层元素类型的大于操作符：</span></span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;sort()函数排序&quot;</span> &lt;&lt; endl;;</span><br><span class="line">	<span class="built_in">sort</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="built_in">greater</span>&lt;string&gt;() ); <span class="comment">//从大到小</span></span><br><span class="line">	<span class="keyword">for</span> (vector&lt;string&gt;::iterator it=v1.<span class="built_in">begin</span>(); it!=v1.<span class="built_in">end</span>(); it++ )</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; *it &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>算术函数对象<br>预定义的函数对象支持加、减、乘、除、求余和取反。调用的操作符是与type相关联的实例</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加法：plus&lt;Types&gt;</span></span><br><span class="line">plus&lt;string&gt; stringAdd;</span><br><span class="line">sres = <span class="built_in">stringAdd</span>(sva1,sva2);</span><br><span class="line"><span class="comment">//减法：minus&lt;Types&gt;</span></span><br><span class="line"><span class="comment">//乘法：multiplies&lt;Types&gt;</span></span><br><span class="line"><span class="comment">//除法divides&lt;Tpye&gt;</span></span><br><span class="line"><span class="comment">//求余：modulus&lt;Tpye&gt;</span></span><br><span class="line"><span class="comment">//取反：negate&lt;Type&gt;</span></span><br><span class="line">negate&lt;<span class="type">int</span>&gt; intNegate;</span><br><span class="line">ires = <span class="built_in">intNegate</span>(ires);</span><br><span class="line">Ires= <span class="built_in">UnaryFunc</span>(<span class="built_in">negate</span>&lt;<span class="type">int</span>&gt;(),Ival1);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>关系函数对象</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//等于equal_to&lt;Tpye&gt;</span></span><br><span class="line">equal_to&lt;string&gt; stringEqual;</span><br><span class="line">sres = <span class="built_in">stringEqual</span>(sval1,sval2);</span><br><span class="line"><span class="comment">//不等于    not_equal_to&lt;Type&gt;</span></span><br><span class="line"><span class="comment">//大于      greater&lt;Type&gt;</span></span><br><span class="line"><span class="comment">//大于等于  greater_equal&lt;Type&gt;</span></span><br><span class="line"><span class="comment">//小于      less&lt;Type&gt;</span></span><br><span class="line"><span class="comment">//小于等于  less_equal&lt;Type&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	vector&lt;string&gt; v1;</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;zzzz&quot;</span>);</span><br><span class="line">	v1.<span class="built_in">push_back</span>(<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">	string s1 = <span class="string">&quot;ccc&quot;</span>;</span><br><span class="line">	<span class="comment">//int num = count_if(v1.begin(),v1.end(), equal_to&lt;string&gt;(),s1);</span></span><br><span class="line">	<span class="type">int</span> num = <span class="built_in">count_if</span>(v1.<span class="built_in">begin</span>(),v1.<span class="built_in">end</span>(),<span class="built_in">bind2nd</span>(<span class="built_in">equal_to</span>&lt;string&gt;(), s1));</span><br><span class="line">	cout &lt;&lt; num &lt;&lt; endl;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>逻辑函数对象</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//逻辑与 logical_and&lt;Type&gt;</span></span><br><span class="line">logical_and&lt;<span class="type">int</span>&gt; indAnd;</span><br><span class="line">ires = <span class="built_in">intAnd</span>(ival1,ival2);</span><br><span class="line">dres = <span class="built_in">BinaryFunc</span>( <span class="built_in">logical_and</span>&lt;<span class="type">double</span>&gt;(),dval1,dval2);</span><br><span class="line"><span class="comment">//逻辑或logical_or&lt;Type&gt;</span></span><br><span class="line"><span class="comment">//逻辑非logical_not&lt;Type&gt;</span></span><br><span class="line">logical_not&lt;<span class="type">int</span>&gt; IntNot;</span><br><span class="line">Ires = <span class="built_in">IntNot</span>(ival1);</span><br><span class="line">Dres = <span class="built_in">UnaryFunc</span>( logical_not&lt;<span class="type">double</span>&gt;,dval1);</span><br></pre></td></tr></table></figure>
+
+<h2 id="7、函数适配器"><a href="#7、函数适配器" class="headerlink" title="7、函数适配器"></a>7、函数适配器</h2><h3 id="7-1、函数适配器的理论知识"><a href="#7-1、函数适配器的理论知识" class="headerlink" title="7.1、函数适配器的理论知识"></a>7.1、函数适配器的理论知识</h3><blockquote>
+<p>STL中已经定义了大量的函数对象，但是有时候需要对函数返回值进行进一步的简单计算，或者填上多余的参数，不能直接带入算法。函数适配器实现了这一功能，将一种函数对象转化为另一种符合要求的函数对象。函数适配器可以分为4大类：绑定适配器（bind adaptor）、组合适配器（composite adaptor）、指针函数适配器（pointer function adaptor）和成员函数适配器（member function adaptor）。</p>
+</blockquote>
+<p>STL中所有的函数适配器由下表列出：</p>
+<p><img src="https://pic.imgdb.cn/item/6317128c16f2c2beb1be5f6a.png"></p>
+<blockquote>
+<p>直接构造STL中的函数适配器通常会导致冗长的类型声明。为简化函数适配器的构造，STL还提供了函数适配器辅助函数（如下图），借助于泛型自动推断技术，无序显式的类型声明便可实现函数适配器的构造。</p>
+</blockquote>
+<p><img src="https://pic.imgdb.cn/item/6317129b16f2c2beb1be6efd.png"></p>
+<h3 id="7-2、常用函数函数适配器"><a href="#7-2、常用函数函数适配器" class="headerlink" title="7.2、常用函数函数适配器"></a>7.2、常用函数函数适配器</h3><p>标准库提供一组函数适配器，用来特殊化或者扩展一元和二元函数对象。常用适配器是：</p>
+<ol>
+<li><strong>绑定器（binder）</strong>: binder通过把二元函数对象的一个实参绑定到一个特殊的值上，将其转换成一元函数对象。C＋＋标准库提供两种预定义的binder适配器：bind1st和bind2nd，前者把值绑定到二元函数对象的第一个实参上，后者绑定在第二个实参上。</li>
+<li><strong>取反器（negator）</strong>: negator是一个将函数对象的值翻转的函数适配器。标准库提供两个预定义的ngeator适配器：not1翻转一元预定义函数对象的真值,而not2翻转二元谓词函数的真值。</li>
+</ol>
+<p>常用函数适配器列表如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">bind1st</span>(op, value)</span><br><span class="line"><span class="built_in">bind2nd</span>(op, value)</span><br><span class="line"><span class="built_in">not1</span>(op)</span><br><span class="line"><span class="built_in">not2</span>(op)</span><br><span class="line"><span class="built_in">mem_fun_ref</span>(op)</span><br><span class="line"><span class="built_in">mem_fun</span>(op)</span><br><span class="line"><span class="built_in">ptr_fun</span>(op)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3、常用函数适配器案例"><a href="#7-3、常用函数适配器案例" class="headerlink" title="7.3、常用函数适配器案例"></a>7.3、常用函数适配器案例</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IsGreat</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">IsGreat</span>(<span class="type">int</span> i)</span><br><span class="line">	&#123;</span><br><span class="line">		m_num = i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> &amp;num)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (num &gt; m_num)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">int</span> m_num;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt; v1;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		v1.<span class="built_in">push_back</span>(i+<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (vector&lt;<span class="type">int</span>&gt;::iterator it = v1.<span class="built_in">begin</span>(); it!=v1.<span class="built_in">end</span>(); it ++)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; *it &lt;&lt; <span class="string">&quot; &quot;</span> ;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="type">int</span> num1 = <span class="built_in">count</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="number">3</span>);</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;num1:&quot;</span> &lt;&lt; num1 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//通过谓词求大于2的个数</span></span><br><span class="line">	<span class="type">int</span> num2 = <span class="built_in">count_if</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="built_in">IsGreat</span>(<span class="number">2</span>)); </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;num2:&quot;</span> &lt;&lt; num2 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//通过预定义函数对象求大于2的个数   greater&lt;int&gt;() 有2个参数 </span></span><br><span class="line">	<span class="comment">//												param &gt; 2</span></span><br><span class="line">	<span class="type">int</span> num3 = <span class="built_in">count_if</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="built_in">bind2nd</span>(<span class="built_in">greater</span>&lt;<span class="type">int</span>&gt;(), <span class="number">2</span> ) );</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;num3:&quot;</span> &lt;&lt; num3 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//取模 能被2整除的数 求奇数</span></span><br><span class="line">	<span class="type">int</span> num4 = <span class="built_in">count_if</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="built_in">bind2nd</span>(modulus &lt;<span class="type">int</span>&gt;(), <span class="number">2</span> ) ); </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;奇数num4:&quot;</span> &lt;&lt; num4 &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	<span class="type">int</span> num5 = <span class="built_in">count_if</span>(v1.<span class="built_in">begin</span>(), v1.<span class="built_in">end</span>(), <span class="built_in">not1</span>( <span class="built_in">bind2nd</span>(modulus &lt;<span class="type">int</span>&gt;(), <span class="number">2</span> ) ) ); </span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;偶数num5:&quot;</span> &lt;&lt; num5 &lt;&lt; endl;</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8、STL的容器算法迭代器的设计理念"><a href="#8、STL的容器算法迭代器的设计理念" class="headerlink" title="8、STL的容器算法迭代器的设计理念"></a>8、STL的容器算法迭代器的设计理念</h2><ol>
+<li>STL的容器通过类模板技术，实现数据类型和容器模型的分离。</li>
+<li>STL的迭代器技术实现了遍历容器的统一方法；也为STL的算法提供了统一性</li>
+<li>STL的函数对象实现了自定义数据类型的算法运算。（算法和）</li>
+<li>具体例子：transform算法的输入，通过迭代器first和last指向的元算作为输入；通过result作为输出；通过函数对象来做自定义数据类型的运算。</li>
+</ol>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/STL/" rel="tag">STL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            STL算法-常用算法介绍
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">STL算法-算法基础</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>

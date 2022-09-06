@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>STL算法-常用算法介绍 |  Lv blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Lv blog" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-STL算法-常用算法介绍"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  STL算法-常用算法介绍
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" class="article-date">
+  <time datetime="2022-09-06T03:31:36.000Z" itemprop="datePublished">2022-09-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/STL/">STL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="STL容器-常用算法介绍"><a href="#STL容器-常用算法介绍" class="headerlink" title="STL容器-常用算法介绍"></a>STL容器-常用算法介绍</h1><h2 id="1、常用的查找算法"><a href="#1、常用的查找算法" class="headerlink" title="1、常用的查找算法"></a>1、常用的查找算法</h2><h3 id="1-1、adjacent-find"><a href="#1-1、adjacent-find" class="headerlink" title="1.1、adjacent_find()"></a>1.1、adjacent_find()</h3><p>在iterator对标识元素范围内，查找一对相邻重复元素，找到则返回指向这对元素的第一个元素的迭代器。否则返回past-the-end。<span id="more"></span></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">4</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = <span class="built_in">adjacent_find</span>(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>());		<span class="comment">//*it == 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2、binary-search"><a href="#1-2、binary-search" class="headerlink" title="1.2、binary_search()"></a>1.2、binary_search()</h3><p>在有序序列中查找value,找到则返回true。注意：在无序序列中，不可使用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set&lt;<span class="type">int</span>&gt; setInt;</span><br><span class="line">setInt.<span class="built_in">insert</span>(<span class="number">3</span>);</span><br><span class="line">setInt.<span class="built_in">insert</span>(<span class="number">1</span>);</span><br><span class="line">setInt.<span class="built_in">insert</span>(<span class="number">7</span>);</span><br><span class="line">setInt.<span class="built_in">insert</span>(<span class="number">5</span>);</span><br><span class="line">setInt.<span class="built_in">insert</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> bFind = <span class="built_in">binary_search</span>(setInt.<span class="built_in">begin</span>(),setInt.<span class="built_in">end</span>(),<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3、count"><a href="#1-3、count" class="headerlink" title="1.3、count()"></a>1.3、count()</h3><p>利用等于操作符，把标志范围内的元素与输入值比较，返回相等的个数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">4</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line"><span class="type">int</span> iCount = <span class="built_in">count</span>(vecInt.<span class="built_in">begin</span>(),vecInt.<span class="built_in">end</span>(),<span class="number">2</span>);	<span class="comment">//iCount==3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4、count-if"><a href="#1-4、count-if" class="headerlink" title="1.4、count_if()"></a>1.4、count_if()</h3><p>假设vector<int> vecIntA，vecIntA包含1,3,5,7,9元素</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先定义比较函数</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">GreaterThree</span><span class="params">(<span class="type">int</span> iNum)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(iNum&gt;=<span class="number">3</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> iCount = <span class="built_in">count_if</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), GreaterThree);</span><br><span class="line"><span class="comment">//此时iCount == 4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5、find"><a href="#1-5、find" class="headerlink" title="1.5、find()"></a>1.5、find()</h3><ul>
+<li><strong>find</strong>: 利用底层元素的等于操作符，对指定范围内的元素与输入值进行比较。当匹配时，结束搜索，返回该元素的迭代器。</li>
+<li><strong>equal_range</strong>: 返回一对iterator，第一个表示lower_bound,第二个表示upper_bound。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::iterator it = <span class="built_in">find</span>(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>(), <span class="number">5</span>);		<span class="comment">//*it == 5</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6、find-if"><a href="#1-6、find-if" class="headerlink" title="1.6、find_if()"></a>1.6、find_if()</h3><ul>
+<li><strong>find_if</strong>: 使用输入的函数代替等于操作符执行find。返回被找到的元素的迭代器。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">假设vector&lt;<span class="type">int</span>&gt; vecIntA，vecIntA包含<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">9</span>元素 </span><br><span class="line">vector&lt;<span class="type">int</span>&gt;::it = <span class="built_in">find_if</span>(vecInt.<span class="built_in">begin</span>(),vecInt.<span class="built_in">end</span>(),GreaterThree);</span><br><span class="line"><span class="comment">//此时 *it==3, *(it+1)==5, *(it+2)==3, *(it+3)==9</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、-常用的排序算法"><a href="#2、-常用的排序算法" class="headerlink" title="2、 常用的排序算法"></a>2、 常用的排序算法</h2><p>以下是排序和通用算法：提供元素排序策略</p>
+<h3 id="2-1、merge"><a href="#2-1、merge" class="headerlink" title="2.1、merge()"></a>2.1、merge()</h3><ul>
+<li><strong>merge</strong>: 合并两个有序序列，存放到另一个序列。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">例如：vecIntA,vecIntB,vecIntC是用vector&lt;<span class="type">int</span>&gt;声明的容器，vecIntA已包含<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>元素，vecIntB已包含<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>元素</span><br><span class="line">vecIntC.<span class="built_in">resize</span>(<span class="number">9</span>);  <span class="comment">//扩大容量</span></span><br><span class="line"><span class="built_in">merge</span>(vecIntA.<span class="built_in">begin</span>(),vecIntA.<span class="built_in">end</span>(),vecIntB.<span class="built_in">begin</span>(),vecIntB.<span class="built_in">end</span>(),vecIntC.<span class="built_in">begin</span>());</span><br><span class="line"><span class="comment">//此时vecIntC就存放了按顺序的1,2,3,4,5,6,7,8,9九个元素</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、sort"><a href="#2-2、sort" class="headerlink" title="2.2、sort()"></a>2.2、sort()</h3><ul>
+<li><strong>sort</strong>: 以默认升序的方式重新排列指定范围内的元素。若要改排序规则，可以输入比较函数。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//学生类</span></span><br><span class="line">Class CStudent:</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">CStudent</span>(<span class="type">int</span> iID, string strName)</span><br><span class="line">    &#123;</span><br><span class="line">        m_iID=iID;  </span><br><span class="line">        m_strName=strName; </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">public</span>:            </span><br><span class="line">    <span class="type">int</span> m_iID;</span><br><span class="line">    string m_strName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//学号比较函数</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Compare</span><span class="params">(<span class="type">const</span> CStudent &amp;stuA, <span class="type">const</span> CStudent &amp;stuB)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (stuA.m_iID &lt; strB.m_iID);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;CStudent&gt; vecStu;</span><br><span class="line">    vecStu.<span class="built_in">push_back</span>(<span class="built_in">CStudent</span>(<span class="number">2</span>,<span class="string">&quot;老二&quot;</span>));</span><br><span class="line">    vecStu.<span class="built_in">push_back</span>(<span class="built_in">CStudent</span>(<span class="number">1</span>,<span class="string">&quot;老大&quot;</span>));</span><br><span class="line">    vecStu.<span class="built_in">push_back</span>(<span class="built_in">CStudent</span>(<span class="number">3</span>,<span class="string">&quot;老三&quot;</span>));</span><br><span class="line">    vecStu.<span class="built_in">push_back</span>(<span class="built_in">CStudent</span>(<span class="number">4</span>,<span class="string">&quot;老四&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sort</span>(vecStu.<span class="built_in">begin</span>(), vecStu.<span class="built_in">end</span>(), Compare);</span><br><span class="line"></span><br><span class="line"><span class="comment">//  此时，vecStu容器包含了按顺序的&quot;老大对象&quot;,&quot;老二对象&quot;,&quot;老三对象&quot;,&quot;老四对象&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3、random-shuffle"><a href="#2-3、random-shuffle" class="headerlink" title="2.3、random_shuffle()"></a>2.3、random_shuffle()</h3><ul>
+<li><strong>random_shuffle</strong>: 对指定范围内的元素随机调整次序。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));			<span class="comment">//设置随机种子</span></span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="function">string <span class="title">str</span><span class="params">(<span class="string">&quot;itcastitcast &quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">random_shuffle</span>(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>());   <span class="comment">//随机排序，结果比如：9,7,1,5,3</span></span><br><span class="line"><span class="built_in">random_shuffle</span>(str.<span class="built_in">begin</span>(), str.<span class="built_in">end</span>());		    <span class="comment">//随机排序，结果比如：&quot; itstcasticat &quot;</span></span><br><span class="line"><span class="built_in">reverse</span>() </span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">reverse</span>(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>());		    <span class="comment">//&#123;9,7,5,3,1&#125;</span></span><br><span class="line"><span class="built_in">random_shuffle</span>(str.<span class="built_in">begin</span>(), str.<span class="built_in">end</span>());		    <span class="comment">//随机排序，结果比如：&quot; itstcasticat &quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-4、reverse"><a href="#2-4、reverse" class="headerlink" title="2.4、reverse()"></a>2.4、reverse()</h3><ul>
+<li><strong>reverse</strong>: 对指定范围内的元素次序反转。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">reverse</span>() </span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecInt;</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecInt.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">reverse</span>(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>());		    <span class="comment">//&#123;9,7,5,3,1&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、常用的拷贝和替换算法"><a href="#3、常用的拷贝和替换算法" class="headerlink" title="3、常用的拷贝和替换算法"></a>3、常用的拷贝和替换算法</h2><h3 id="3-1、copy"><a href="#3-1、copy" class="headerlink" title="3.1、copy()"></a>3.1、copy()</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntB;</span><br><span class="line">vecIntB.<span class="built_in">resize</span>(<span class="number">5</span>);			<span class="comment">//扩大空间</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">copy</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), vecIntB.<span class="built_in">begin</span>());	<span class="comment">//vecIntB: &#123;1,3,5,7,9&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2、replace"><a href="#3-2、replace" class="headerlink" title="3.2、replace()"></a>3.2、replace()</h3><ul>
+<li><strong>replace(beg,end,oldValue,newValue)</strong>: 将指定范围内的所有等于oldValue的元素替换成newValue。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">replace</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), <span class="number">3</span>, <span class="number">8</span>);		<span class="comment">//&#123;1,8,5,8,9&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3、replace-if"><a href="#3-3、replace-if" class="headerlink" title="3.3、replace_if()"></a>3.3、replace_if()</h3><ul>
+<li><strong>replace_if</strong>: 将指定范围内所有操作结果为true的元素用新值替换。<br>用法举例：<br><code>replace_if(vecIntA.begin(),vecIntA.end(),GreaterThree,newVal)</code><br>其中 vecIntA是用vector<int>声明的容器<br>GreaterThree 函数的原型是 bool GreaterThree(int iNum)</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//把大于等于3的元素替换成8</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">replace_if</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), GreaterThree, <span class="number">8</span>);	<span class="comment">// GreaterThree的定义在上面。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4、swap"><a href="#3-4、swap" class="headerlink" title="3.4、swap()"></a>3.4、swap()</h3><ul>
+<li><strong>swap</strong>: 交换两个容器的元素</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntB;</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">2</span>);</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">swap</span>(vecIntA, vecIntB);     <span class="comment">//交换</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4、常用的算术和生成算法"><a href="#4、常用的算术和生成算法" class="headerlink" title="4、常用的算术和生成算法"></a>4、常用的算术和生成算法</h2><h3 id="4-1、accumulate"><a href="#4-1、accumulate" class="headerlink" title="4.1、accumulate()"></a>4.1、accumulate()</h3><ul>
+<li><strong>accumulate</strong>: 对指定范围内的元素求和，然后结果再加上一个由val指定的初始值。</li>
+<li><code>#include&lt;numeric&gt;</code></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> iSum = <span class="built_in">accumulate</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), <span class="number">100</span>);		<span class="comment">//iSum==125</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2、fill"><a href="#4-2、fill" class="headerlink" title="4.2、fill()"></a>4.2、fill()</h3><ul>
+<li><strong>fill</strong>: 将输入值赋给标志范围内的所有元素。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">fill</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), <span class="number">8</span>);		<span class="comment">//8, 8, 8, 8, 8</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5、常用的集合算法"><a href="#5、常用的集合算法" class="headerlink" title="5、常用的集合算法"></a>5、常用的集合算法</h2><h3 id="5-1、set-union-set-intersection-set-difference"><a href="#5-1、set-union-set-intersection-set-difference" class="headerlink" title="5.1、set_union(), set_intersection(), set_difference()"></a>5.1、set_union(), set_intersection(), set_difference()</h3><ul>
+<li><strong>set_union</strong>: 构造一个有序序列，包含两个有序序列的并集。</li>
+<li><strong>set_intersection</strong>: 构造一个有序序列，包含两个有序序列的交集。</li>
+<li><strong>set_difference</strong>: 构造一个有序序列，该序列保留第一个有序序列中存在而第二个有序序列中不存在的元素。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntB;</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">6</span>);</span><br><span class="line">vecIntB.<span class="built_in">push_back</span>(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; vecIntC;</span><br><span class="line">vecIntC.<span class="built_in">resize</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//并集</span></span><br><span class="line"><span class="built_in">set_union</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), vecIntB.<span class="built_in">begin</span>(), vecIntB.<span class="built_in">end</span>(), vecIntC.<span class="built_in">begin</span>());		<span class="comment">//vecIntC : &#123;1,3,5,6,7,8,9,0,0,0&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//交集</span></span><br><span class="line"><span class="built_in">fill</span>(vecIntC.<span class="built_in">begin</span>(),vecIntC.<span class="built_in">end</span>(),<span class="number">0</span>);</span><br><span class="line"><span class="built_in">set_intersection</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), vecIntB.<span class="built_in">begin</span>(), vecIntB.<span class="built_in">end</span>(), vecIntC.<span class="built_in">begin</span>());		<span class="comment">//vecIntC: &#123;1,3,5,0,0,0,0,0,0,0&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//差集</span></span><br><span class="line"><span class="built_in">fill</span>(vecIntC.<span class="built_in">begin</span>(),vecIntC.<span class="built_in">end</span>(),<span class="number">0</span>);</span><br><span class="line"><span class="built_in">set_difference</span>(vecIntA.<span class="built_in">begin</span>(), vecIntA.<span class="built_in">end</span>(), vecIntB.<span class="built_in">begin</span>(), vecIntB.<span class="built_in">end</span>(), vecIntC.<span class="built_in">begin</span>());			<span class="comment">//vecIntC: &#123;7,9,0,0,0,0,0,0,0,0&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6、常用的遍历算法"><a href="#6、常用的遍历算法" class="headerlink" title="6、常用的遍历算法"></a>6、常用的遍历算法</h2><h3 id="6-1、for-each"><a href="#6-1、for-each" class="headerlink" title="6.1、for_each()"></a>6.1、for_each()</h3><ul>
+<li><strong>for_each</strong>: 用指定函数依次对指定范围内所有元素进行迭代访问。该函数不得修改序列中的元素。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">(<span class="type">const</span> <span class="type">int</span> &amp;iItem)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	cout &lt;&lt; iItem;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">main</span>()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> iArray[] = &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line">	<span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">vecInt</span><span class="params">(iArray,iArray+<span class="keyword">sizeof</span>(iArray)/<span class="keyword">sizeof</span>(iArray[<span class="number">0</span>]))</span></span>;</span><br><span class="line">    for_each(vecInt.<span class="built_in">begin</span>(), vecInt.<span class="built_in">end</span>(), show);</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果打印出0 1 2 3 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2、transform"><a href="#6-2、transform" class="headerlink" title="6.2、transform()"></a>6.2、transform()</h3><ul>
+<li><strong>transform</strong>: 与for_each类似，遍历所有元素，但可对容器的元素进行修改</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">increase</span> <span class="params">(<span class="type">int</span> i)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line"><span class="keyword">return</span> i+<span class="number">1</span>;   </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="built_in">main</span>()</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; vecIntA;</span><br><span class="line">    vecIntA.<span class="built_in">push_back</span>(<span class="number">1</span>);</span><br><span class="line">    vecIntA.<span class="built_in">push_back</span>(<span class="number">3</span>);</span><br><span class="line">    vecIntA.<span class="built_in">push_back</span>(<span class="number">5</span>);</span><br><span class="line">    vecIntA.<span class="built_in">push_back</span>(<span class="number">7</span>);</span><br><span class="line">    vecIntA.<span class="built_in">push_back</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">transform</span>(vecIntA.<span class="built_in">begin</span>(),vecIntA.<span class="built_in">end</span>(),vecIntA.<span class="built_in">begin</span>(),increase);		<span class="comment">//vecIntA : &#123;2,4,6,8,10&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/06/STL%E7%AE%97%E6%B3%95-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/STL/" rel="tag">STL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/09/06/STL%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E4%B8%AD%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%92%8C%E8%B0%93%E8%AF%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">STL算法-算法中函数对象和谓词</div>
+      </a>
+    
+  </nav>
+
+   
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2022
+        <i class="ri-heart-fill heart_icon"></i> Lv Song
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Lv blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/photos">图片</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/player">视频</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>老板行行好吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"display":{"position":"right","width":60,"height":120,"hOffset":55,"vOffset":0},"react":{"opacity":0.8},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+</html>
