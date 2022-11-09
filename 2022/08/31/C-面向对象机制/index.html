@@ -120,7 +120,7 @@
 </li>
 </ul>
 <p>在c++中，通过抽象数据类型（abstract data type，ADT），在类中定义数据和函数，来实现数据和函数直接的绑定。概括来说，在C++类中有两种成员数据：static、nonstatic；三种成员函数：static、nonstatic、virtual。</p>
-<p><img src="https://pic.imgdb.cn/item/630ece9216f2c2beb1787656.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/630ece9216f2c2beb1787656.jpg"></p>
 <h2 id="2、c-中类的成员数据和成员函数的存储机制"><a href="#2、c-中类的成员数据和成员函数的存储机制" class="headerlink" title="2、c++中类的成员数据和成员函数的存储机制"></a>2、c++中类的成员数据和成员函数的存储机制</h2><p>c++实现了“封装”，那么数据(成员属性)和操作(成员函数)是什么样的呢？</p>
 <ul>
 <li><p>“数据”和“处理数据的操作(函数)”是分开存储的。</p>
@@ -151,7 +151,7 @@
 <p>问题出来了：很多对象共用一块代码？代码是如何区分具体对象的呢？</p>
 <p>换句话说：int getK() const { return k; }，代码是如何区分，具体obj1、obj2、obj3对象的k值？</p>
 <h2 id="3、this指针"><a href="#3、this指针" class="headerlink" title="3、this指针"></a>3、this指针</h2><p>c++的数据和操作是分开存储，并且每一个非内联成员函数(non-inline member function)只会诞生一份函数实例，也就是说多个同类型的对象会共用一块代码那么问题是：这一块代码是如何区分那个对象调用自己的呢？</p>
-<p><img src="https://pic.imgdb.cn/item/630ecec516f2c2beb178a4da.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/630ecec516f2c2beb178a4da.jpg"></p>
 <p>c++通过提供特殊的对象指针，this指针，解决上述问题。this指针指向被调用的成员函数所属的对象。c++规定，this指针是隐含在对象成员函数内的一种指针。当一个对象被创建后，它的每一个成员函数都含有一个系统自动生成的隐含指针this，用以保存这个对象的地址，也就是说虽然我们没有写上this指针，编译器在编译的时候也是会加上的。因此this也称为“指向本对象的指针”，this指针并不是对象的一部分，不会影响sizeof(对象)的结果。		this指针是C++实现封装的一种机制，它将对象和该对象调用的成员函数连接在一起，在外部看来，每一个对象都拥有自己的函数成员。一般情况下，并不写this，而是让系统进行默认设置。</p>
 <h3 id="3-1、this指针的使用"><a href="#3-1、this指针的使用" class="headerlink" title="3.1、this指针的使用"></a>3.1、this指针的使用</h3><ul>
 <li><p>当形参和成员变量同名时，可用this指针来区分。</p>

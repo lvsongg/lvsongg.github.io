@@ -114,7 +114,7 @@
        
   <h1 id="C-输入输出–文件IO"><a href="#C-输入输出–文件IO" class="headerlink" title="C++输入输出–文件IO"></a>C++输入输出–文件IO</h1><h2 id="1、文件流类和文件流对象"><a href="#1、文件流类和文件流对象" class="headerlink" title="1、文件流类和文件流对象"></a>1、文件流类和文件流对象</h2><p>输入输出是以系统指定的标准设备（输入设备为键盘，输出设备为显示器）为对象的。在实际应用中，常以磁盘文件作为对象。即从磁盘文件读取数据，将数据输出到磁盘文件。<span id="more"></span></p>
 <p>和文件有关系的输入输出类主要在fstream.h这个头文件中被定义，在这个头文件中主要被定义了三个类，由这三个类控制对文件的各种输入输出操 作，他们分别是ifstream、ofstream、fstream，其中fstream类是由iostream类派生而来，他们之间的继承关系见下图所示：</p>
-<p><img src="https://pic.imgdb.cn/item/630f16a616f2c2beb1a3d351.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/630f16a616f2c2beb1a3d351.jpg"></p>
 <p>由于文件设备并不像显示器屏幕与键盘那样是标准默认设备，所以它在fstream.h头文件中是没有像cout那样预先定义的全局对象，所以我们必须自己定义一个该类的对象。</p>
 <ul>
 <li><p>ifstream类，它是从istream类派生的，用来支持从磁盘文件的输入。</p>
@@ -132,7 +132,7 @@
 </li>
 </ul>
 <p>C++把每个文件都看成一个有序的字节流，每一个文件或者以文件结束符（end of file marker）结束，或者在特定的字节号处结束，如下图所示。</p>
-<p><img src="https://pic.imgdb.cn/item/630f16c216f2c2beb1a3e3ba.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/630f16c216f2c2beb1a3e3ba.jpg"></p>
 <p>当打开一个文件时，该文件就和某个流关联起来了。对文件进行读写实际上受到一个文件定位指针（file position pointer）的控制。输入流的指针也称为读指针，每一次提取操作将从读指针当前所指位置开始，每次提取操作自动将读指针向文件尾移动。输出流指针也称写指针，每一次插入操作将从写指针当前位置开始，每次插入操作自动将写指针向文件尾移动。 </p>
 <h3 id="2-1、文件打开"><a href="#2-1、文件打开" class="headerlink" title="2.1、文件打开"></a>2.1、文件打开</h3><p>打开文件是指在文件读写之前做必要的准备工作，包括：</p>
 <ul>

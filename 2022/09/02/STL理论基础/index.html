@@ -113,7 +113,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="STL-标准模板库-理论基础"><a href="#STL-标准模板库-理论基础" class="headerlink" title="STL(标准模板库)理论基础"></a>STL(标准模板库)理论基础</h1><h2 id="1、基本概念"><a href="#1、基本概念" class="headerlink" title="1、基本概念"></a>1、基本概念</h2><p>STL（Standard Template Library，标准模板库)是惠普实验室开发的一系列软件的统称。现然主要出现在C++中，但在被引入C++之前该技术就已经存在了很长的一段时间。<span id="more"></span><br>STL的从广义上讲分为三类：algorithm（算法）、container（容器）和iterator（迭代器），容器和算法通过迭代器可以进行无缝地连接。几乎所有的代码都采用了模板类和模板函数的方式，这相比于传统的由函数和类组成的库来说提供了更好的代码重用机会。在C++标准中，STL被组织为下面的13个头文件：<code>&lt;algorithm&gt;、&lt;deque&gt;、&lt;functional&gt;、&lt;iterator&gt;、&lt;vector&gt;、&lt;list&gt;、&lt;map&gt;、&lt;memory&gt;、&lt;numeric&gt;、&lt;queue&gt;、&lt;set&gt;、&lt;stack&gt; 和&lt;utility&gt;</code>。</p>
-<p><img src="https://pic.imgdb.cn/item/6312a32216f2c2beb1758e6b.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/6312a32216f2c2beb1758e6b.jpg"></p>
 <p><strong>STL详细的说六大组件</strong>  </p>
 <ul>
 <li>容器（Container）</li>
@@ -135,7 +135,7 @@
 </ol>
 <h2 id="2、容器"><a href="#2、容器" class="headerlink" title="2、容器"></a>2、容器</h2><p>在实际的开发过程中，数据结构本身的重要性不会逊于操作于数据结构的算法的重要性，当程序中存在着对时间要求很高的部分时，数据结构的选择就显得更加重要。<br>经典的数据结构数量有限，但是我们常常重复着一些为了实现向量、链表等结构而编写的代码，这些代码都十分相似，只是为了适应不同数据的变化而在 细节上有所出入。STL容器就为我们提供了这样的方便，它允许我们重复利用已有的实现构造自己的特定类型下的数据结构，通过设置一些模板，STL容器对最常用的数据结构提供了支持，这些模板的参数允许我们指定容器中元素的数据类型，可以将我们许多重复而乏味的工作简化。<br>容器部分主要由头文 件<code>&lt;vector&gt;,&lt;list&gt;,&lt;deque&gt;,&lt;set&gt;,&lt;map&gt;,&lt;stack&gt; 和&lt;queue&gt;</code>组成。对于常用的一些容器和容器适配器（可以看作由其它容器实现的容器），可以通过下表总结一下它们和相应头文件的对应关系。</p>
 <h3 id="2-1、容器的概念"><a href="#2-1、容器的概念" class="headerlink" title="2.1、容器的概念"></a>2.1、容器的概念</h3><p><em><strong>用来管理一组元素</strong></em></p>
-<p><img src="https://pic.imgdb.cn/item/6312a56816f2c2beb1766a9c.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/6312a56816f2c2beb1766a9c.jpg"></p>
 <h3 id="2-2、容器的分类"><a href="#2-2、容器的分类" class="headerlink" title="2.2、容器的分类"></a>2.2、容器的分类</h3><ul>
 <li><strong>序列式容器（Sequence containers）</strong><br>每个元素都有固定位置－－取决于插入时机和地点，和元素值无关。<br>vector、deque、list  </li>
 <li><strong>关联式容器（Associated containers）</strong><br>元素位置取决于特定的排序准则，和插入顺序无关。<br>set、multiset、map、multimap</li>
